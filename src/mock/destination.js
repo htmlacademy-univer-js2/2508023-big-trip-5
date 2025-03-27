@@ -99,4 +99,6 @@ const mockDestination = [
   }
 ];
 
-export { mockDestination };
+const getDestinations = () => mockDestination;
+
+export { mockDestination, getDestinations };
