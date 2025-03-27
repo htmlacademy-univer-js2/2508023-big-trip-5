@@ -1,9 +1,6 @@
 import { createElement } from '../render.js';
 
-function createBoardTemplate () {
-  return '<section class="terip-vents"></section>';
-
-}
+const createBoardTemplate = () => '<section class="terip-vents"></section>';
 
 export default class BoardView {
   getTemplate() {
