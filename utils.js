@@ -22,15 +22,15 @@ const extractTime = (date) => dayjs.utc(date).format('HH:mm');
 const calculateFlightTime = (startTime, endTime, unit = 'm') =>{
   const difference = dayjs(endTime).diff(dayjs(startTime), unit);
   const hours = Math.floor(difference / 60);
+  const days = Math.floor(hours / 24);
+
   if (difference < 60){
     return `${difference}M`;
+  }else if (hours < 24){
+    return `${hours}H ${difference - hours * 60}M`;
+  }else{
+    return `${days}D ${hours}H ${difference - hours * 60}M`;
   }
-  return `${hours}H ${difference - hours * 60}M`;
 };
-/*
-const w = dayjs('2025-04-14T20:18:12.653Z');
-const e = dayjs('2025-04-15T01:35:13.536Z');
-// eslint-disable-next-line no-console
-console.log(calculateFlightTime(w,e));*/
 
 export { getRandomArrayElement, getRandomInteger, correctDateFormat, extractDate, extractTime, calculateFlightTime };

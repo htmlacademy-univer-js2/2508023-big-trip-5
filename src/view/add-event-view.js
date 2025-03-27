@@ -1,5 +1,39 @@
 import { getRandomInteger, correctDateFormat } from '../../utils.js';
 import { createElement } from '../render.js';
+import { POINT_TYPES } from '../const.js';
+
+const BLANK_POINT = {
+  id: 0,
+  type: POINT_TYPES[0],
+  destination: null,
+  dateFrom: '',
+  dateTo: '',
+  offers: null,
+  price: 0,
+  pictures: [
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    }
+  ],
+  isFavorite: false,
+};
 
 const createAddEventTemplate = (point) => {
   const {destination, dateFrom, dateTo, price, pictures, offers} = point;
@@ -171,7 +205,7 @@ const createAddEventTemplate = (point) => {
 };
 
 export default class AddEventView {
-  constructor({point}){
+  constructor({point = BLANK_POINT}){
     this.point = point;
   }
 

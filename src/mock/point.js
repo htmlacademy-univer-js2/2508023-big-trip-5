@@ -3,7 +3,6 @@ import { getOffers } from './offers';
 import { POINT_TYPES, DESCRIPTIONS, DESTINATIONS } from '../const';
 import { getDestinations } from './destination';
 
-
 const mockPoint = [
   {
     id: 1,
@@ -35,7 +34,7 @@ const mockPoint = [
         description: getRandomArrayElement(DESCRIPTIONS)
       }
     ],
-    isFavorite: false,
+    isFavorite: true,
   },
   {
     id: 2,
@@ -99,7 +98,7 @@ const mockPoint = [
         description: getRandomArrayElement(DESCRIPTIONS)
       }
     ],
-    isFavorite: false,
+    isFavorite: true,
   },
   {
     id: 4,

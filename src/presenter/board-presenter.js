@@ -20,7 +20,7 @@ export default class BoardPresenter {
     render(this.boardComponent, this.boardContainer);
     render(new SortView(), this.boardComponent.getElement());
     render(this.eventListComponent, this.boardComponent.getElement());
-    render(new AddEventView({ point: getRandomPoint() }), this.eventListComponent.getElement());
+    render(new AddEventView({ point: this.boardPoints[0] }), this.eventListComponent.getElement());
 
     for (let i = 0; i < 3; i++) {
       render(new EventView({ point: getRandomPoint() }), this.eventListComponent.getElement());
