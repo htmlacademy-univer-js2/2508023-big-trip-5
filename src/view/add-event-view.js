@@ -1,6 +1,7 @@
 import { getRandomInteger, correctDateFormat } from '../../utils.js';
-import { createElement } from '../render.js';
+//import { createElement } from '../render.js';
 import { POINT_TYPES } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_POINT = {
   id: 0,
@@ -204,23 +205,15 @@ const createAddEventTemplate = (point) => {
   );
 };
 
-export default class AddEventView {
+export default class AddEventView extends AbstractView{
+  #point = null;
+
   constructor({point = BLANK_POINT}){
-    this.point = point;
+    super();
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createAddEventTemplate(this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement(){
-    this.element = null;
+  get template() {
+    return createAddEventTemplate(this.#point);
   }
 }

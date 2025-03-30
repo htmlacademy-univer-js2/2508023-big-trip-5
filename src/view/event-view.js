@@ -1,5 +1,6 @@
-import { createElement } from '../render.js';
+//import { createElement } from '../render.js';
 import { extractDate, extractTime, calculateFlightTime, getRandomInteger } from '../../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createEventTemplate = (point) => {
   const {dateFrom, dateTo, price, offers, type, isFavorite} = point;
@@ -47,23 +48,15 @@ const createEventTemplate = (point) => {
 `);
 };
 
-export default class EventView {
+export default class EventView extends AbstractView {
+  #point = null;
+
   constructor({point}){
-    this.point = point;
+    super();
+    this.#point = point;
   }
 
-  getTemplate(){
-    return createEventTemplate(this.point);
-  }
-
-  getElement(){
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement(){
-    this.element = null;
+  get template(){
+    return createEventTemplate(this.#point);
   }
 }
