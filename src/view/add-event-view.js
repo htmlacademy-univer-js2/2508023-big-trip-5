@@ -1,5 +1,4 @@
 import { getRandomInteger, correctDateFormat } from '../../utils.js';
-//import { createElement } from '../render.js';
 import { POINT_TYPES } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
