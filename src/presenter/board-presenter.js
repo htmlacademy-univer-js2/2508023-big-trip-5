@@ -13,6 +13,14 @@ export default class BoardPresenter {
   #boardComponent = new BoardView();
   #eventListComponent = new EventsListView();
   #boardPoints = [];
+  #renderPoint(point){
+    const pointComponent = new AddEventView({
+      point: this.point,
+      offers: [...this.#pointModel.getOffersById(this.point.type, this.point)],
+      destination:this.#pointModel.getDestinationsById(point.destination)
+    });
+    render(pointComponent,this.#eventListComponent.element);
+  }
 
   constructor({boardContainer, pointModel}) {
     this.#boardContainer = boardContainer;
@@ -31,12 +39,7 @@ export default class BoardPresenter {
     }
 
     for (let i = 1; i < this.#pointModel.length; i++){
-      const point = new AddEventView({
-        point: this.boardPoints[i],
-        offers: [...this.#pointModel.getOffersById(this.boardPoints[i].type, this.boardPoints[i])],
-        destination:this.#pointModel.getDestinationsById(this.boardPoints[i].destination)
-      });
-      render(point,this.#eventListComponent.element);
+      this.#renderPoint(this.#boardPoints[i]);
     }
   }
 }
