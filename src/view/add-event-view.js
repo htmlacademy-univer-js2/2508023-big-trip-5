@@ -215,6 +215,7 @@ export default class AddEventView extends AbstractView{
     this.#onFormSubmit = onFormSubmit;
 
     this.element.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
   get template() {
