@@ -1,5 +1,4 @@
-//import { createElement } from '../render.js';
-import { extractDate, extractTime, calculateFlightTime, getRandomInteger } from '../../utils.js';
+import { extractDate, extractTime, calculateFlightTime, getRandomArrayElement, getRandomInteger } from '../../utils.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createEventTemplate = (point) => {
@@ -30,9 +29,9 @@ const createEventTemplate = (point) => {
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
       <li class="event__offer">
-        <span class="event__offer-title">${offers[getRandomInteger(0,4)].type}</span>
+        <span class="event__offer-title">${getRandomArrayElement(offers).type}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offers[getRandomInteger(0,4)].offer[getRandomInteger(0,4)].price}</span>
+        <span class="event__offer-price">${getRandomArrayElement(offers).offer[getRandomInteger(0,4)].price}</span>
       </li>
     </ul>
     <button class="event__favorite-btn event__favorite-btn${activeFavorite}" type="button">
@@ -50,13 +49,22 @@ const createEventTemplate = (point) => {
 
 export default class EventView extends AbstractView {
   #point = null;
+  #onOpenEventClick = null;
 
-  constructor({point}){
+  constructor({point, onOpenEventClick}){
     super();
     this.#point = point;
+    this.#onOpenEventClick = onOpenEventClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#openEventClickHandler.bind(this));
   }
 
   get template(){
     return createEventTemplate(this.#point);
   }
+
+  #openEventClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onOpenEventClick(evt);
+  };
 }

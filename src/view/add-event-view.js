@@ -206,13 +206,22 @@ const createAddEventTemplate = (point) => {
 
 export default class AddEventView extends AbstractView{
   #point = null;
+  #onFormSubmit = null;
 
-  constructor({point = BLANK_POINT}){
+  constructor({point = BLANK_POINT, onFormSubmit}){
     super();
     this.#point = point;
+    this.#onFormSubmit = onFormSubmit;
+
+    this.element.addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createAddEventTemplate(this.#point);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#onFormSubmit();
+  };
 }
