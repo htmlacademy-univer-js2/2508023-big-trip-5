@@ -1,4 +1,5 @@
-import { getRandomInteger, correctDateFormat } from '../../utils.js';
+import { getRandomInteger } from '../utils/common.js';
+import { correctDateFormat } from '../utils/point.js';
 import { POINT_TYPES } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 

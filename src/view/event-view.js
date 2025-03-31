@@ -1,4 +1,5 @@
-import { extractDate, extractTime, calculateFlightTime, getRandomArrayElement, getRandomInteger } from '../../utils.js';
+import { extractDate, extractTime, calculateFlightTime } from '../utils/point.js';
+import { getRandomArrayElement, getRandomInteger } from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createEventTemplate = (point) => {

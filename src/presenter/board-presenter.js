@@ -4,6 +4,7 @@ import EventsListView from '../view/events-list-view.js';
 import BoardView from '../view/board-view.js';
 import AddEventView from '../view/add-event-view.js';
 import { render, replace} from '../framework/render.js';
+import NoPointView from '../view/no-point-view.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -48,6 +49,23 @@ export default class BoardPresenter {
     render(eventViewComponent, this.#eventListComponent.element);
   }
 
+  #renderBoard(){
+    render(this.#boardComponent, this.#boardContainer);
+
+    if (this.#boardPoints.every((point) => point.isArchive)) {
+      render(new NoPointView(), this.#boardComponent.element);
+      return;
+    }
+
+
+    render(new SortView(), this.#boardComponent.element);
+    render(this.#eventListComponent, this.#boardComponent.element);
+
+    for (let i = 0; i < this.#pointModel.points.length; i++) {
+      this.#renderPoint(this.#boardPoints[i]);
+    }
+  }
+
   constructor({boardContainer, pointModel}) {
     this.#boardContainer = boardContainer;
     this.#pointModel = pointModel;
@@ -55,12 +73,6 @@ export default class BoardPresenter {
 
   init() {
     this.#boardPoints = [...this.#pointModel.points];
-    render(this.#boardComponent, this.#boardContainer);
-    render(new SortView(), this.#boardComponent.element);
-    render(this.#eventListComponent, this.#boardComponent.element);
-
-    for (let i = 0; i < this.#pointModel.points.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
-    }
+    this.#renderBoard();
   }
 }
