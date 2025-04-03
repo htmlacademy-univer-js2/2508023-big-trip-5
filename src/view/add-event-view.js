@@ -1,6 +1,7 @@
-import { getRandomInteger, correctDateFormat } from '../../utils.js';
-import { createElement } from '../render.js';
+import { getRandomInteger } from '../utils/common.js';
+import { correctDateFormat } from '../utils/point.js';
 import { POINT_TYPES } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_POINT = {
   id: 0,
@@ -204,23 +205,25 @@ const createAddEventTemplate = (point) => {
   );
 };
 
-export default class AddEventView {
-  constructor({point = BLANK_POINT}){
-    this.point = point;
+export default class AddEventView extends AbstractView{
+  #point = null;
+  #onFormSubmit = null;
+
+  constructor({point = BLANK_POINT, onFormSubmit}){
+    super();
+    this.#point = point;
+    this.#onFormSubmit = onFormSubmit;
+
+    this.element.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
-  getTemplate() {
-    return createAddEventTemplate(this.point);
+  get template() {
+    return createAddEventTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement(){
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#onFormSubmit();
+  };
 }
