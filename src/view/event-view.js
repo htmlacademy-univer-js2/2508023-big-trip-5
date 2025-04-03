@@ -1,5 +1,6 @@
-import { createElement } from '../render.js';
-import { extractDate, extractTime, calculateFlightTime, getRandomInteger } from '../../utils.js';
+import { extractDate, extractTime, calculateFlightTime } from '../utils/point.js';
+import { getRandomArrayElement, getRandomInteger } from '../utils/common.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createEventTemplate = (point) => {
   const {dateFrom, dateTo, price, offers, type, isFavorite} = point;
@@ -29,9 +30,9 @@ const createEventTemplate = (point) => {
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
       <li class="event__offer">
-        <span class="event__offer-title">${offers[getRandomInteger(0,4)].type}</span>
+        <span class="event__offer-title">${getRandomArrayElement(offers).type}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offers[getRandomInteger(0,4)].offer[getRandomInteger(0,4)].price}</span>
+        <span class="event__offer-price">${getRandomArrayElement(offers).offer[getRandomInteger(0,4)].price}</span>
       </li>
     </ul>
     <button class="event__favorite-btn event__favorite-btn${activeFavorite}" type="button">
@@ -47,23 +48,24 @@ const createEventTemplate = (point) => {
 `);
 };
 
-export default class EventView {
-  constructor({point}){
-    this.point = point;
+export default class EventView extends AbstractView {
+  #point = null;
+  #onOpenEventClick = null;
+
+  constructor({point, onOpenEventClick}){
+    super();
+    this.#point = point;
+    this.#onOpenEventClick = onOpenEventClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#openEventClickHandler.bind(this));
   }
 
-  getTemplate(){
-    return createEventTemplate(this.point);
+  get template(){
+    return createEventTemplate(this.#point);
   }
 
-  getElement(){
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement(){
-    this.element = null;
-  }
+  #openEventClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onOpenEventClick(evt);
+  };
 }
