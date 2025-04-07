@@ -90,7 +90,8 @@ const createAddEventTemplate = (point) => {
           <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
         </div>
 
-        <div class="event__type-item">
+Дарья Королёва, [07.04.2025 16:42]
+<div class="event__type-item">
           <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
           <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
         </div>
@@ -165,7 +166,7 @@ const createAddEventTemplate = (point) => {
           <span class="event__offer-price">${offers[getRandomInteger(0, 4)].offer[getRandomInteger(0, 4)].price}</span>
         </label>
       </div>
-
+      
       <div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
         <label class="event__offer-label" for="event-offer-seats-1">
