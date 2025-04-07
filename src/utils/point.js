@@ -13,6 +13,7 @@ const isEventAfter = (date) => date && dayjs().isAfter(date, 'D');
 
 const isEventBefore = (date) => date && dayjs().isBefore(date, 'D');
 
+
 const calculateFlightTime = (startTime, endTime, unit = 'm') =>{
   const difference = dayjs(endTime).diff(dayjs(startTime), unit);
   const hours = Math.floor(difference / 60);
