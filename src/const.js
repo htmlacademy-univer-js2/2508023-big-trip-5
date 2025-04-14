@@ -14,11 +14,19 @@ const DESTINATIONS = ['Paris', 'Madrid', 'New-York', 'Moskow', 'London', 'Berlin
 
 const OFFERS = ['Upgrade to a business class', 'Rent a car', 'Add luggage', 'Book tickets', 'Choose seats', 'Add meal'];
 
-const FILTER_TYPE = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
 };
 
-export { POINT_TYPES, DESCRIPTIONS, DESTINATIONS, OFFERS, FILTER_TYPE };
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offer',
+};
+
+export { POINT_TYPES, DESCRIPTIONS, DESTINATIONS, OFFERS, FilterType, SortType };
