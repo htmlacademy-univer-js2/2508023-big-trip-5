@@ -26,7 +26,8 @@
     "node": "20"
   },
   "dependencies": {
-    "dayjs": "^1.11.7"
+    "dayjs": "^1.11.7",
+    "nanoid": "^4.0.0"
   },
   "browserslist": [
     ">0.2%",

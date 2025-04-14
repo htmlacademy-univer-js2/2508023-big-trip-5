@@ -166,7 +166,7 @@ const createAddEventTemplate = (point) => {
           <span class="event__offer-price">${offers[getRandomInteger(0, 4)].offer[getRandomInteger(0, 4)].price}</span>
         </label>
       </div>
-      
+
       <div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
         <label class="event__offer-label" for="event-offer-seats-1">
@@ -225,6 +225,6 @@ export default class AddEventView extends AbstractView{
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#onFormSubmit();
+    this.#onFormSubmit(this.#point);
   };
 }

@@ -4,6 +4,7 @@ import BoardView from '../view/board-view.js';
 import { render, RenderPosition } from '../framework/render.js';
 import NoPointView from '../view/no-point-view.js';
 import PointPresenter from './point-presenter.js';
+import { updateItem } from '../utils/common.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -15,6 +16,7 @@ export default class BoardPresenter {
   #noPointComponent = new NoPointView();
 
   #boardPoints = [];
+  #pointsPresenters = new Map();
 
   constructor({boardContainer, pointModel}) {
     this.#boardContainer = boardContainer;
@@ -29,9 +31,16 @@ export default class BoardPresenter {
   #renderPoint(point){
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#eventListComponent.element,
+      onDataChange: this.#handlePointChange
     });
 
     pointPresenter.init(point);
+    this.#pointsPresenters.set(point.id, pointPresenter);
+  }
+
+  #clearPointsList(){
+    this.#pointsPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenters.clear();
   }
 
   #renderPointsList(){
@@ -41,6 +50,11 @@ export default class BoardPresenter {
       this.#renderPoint(this.#boardPoints[i]);
     }
   }
+
+  #handlePointChange = (updatedTask) => {
+    this.#boardPoints = updateItem(this.#boardPoints, updatedTask);
+    this.#pointsPresenters.get(updatedTask.id).init(updatedTask);
+  };
 
   #renderSort() {
     render(this.#sortComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
