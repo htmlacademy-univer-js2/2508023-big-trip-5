@@ -31,7 +31,8 @@ export default class BoardPresenter {
   #renderPoint(point){
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#eventListComponent.element,
-      onDataChange: this.#handlePointChange
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
 
     pointPresenter.init(point);
@@ -50,6 +51,10 @@ export default class BoardPresenter {
       this.#renderPoint(this.#boardPoints[i]);
     }
   }
+
+  #handleModeChange = () => {
+    this.#pointsPresenters.forEach((presenter) => presenter.resetView());
+  };
 
   #handlePointChange = (updatedTask) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedTask);

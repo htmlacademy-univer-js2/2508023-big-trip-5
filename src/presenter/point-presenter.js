@@ -2,21 +2,28 @@ import { replace, render, remove } from '../framework/render';
 import AddEventView from '../view/add-event-view';
 import EventView from '../view/event-view';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 export default class PointPresenter{
   #pointListContainer = null;
   #handleDataChange = null;
+  #handleModeChange = null;
 
   #eventViewComponent = null;
   #pointComponent = null;
 
   #point = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({pointListContainer, onDataChange}){
+  constructor({pointListContainer, onDataChange, onModeChange}){
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
-  init(point){
+  init(point) {
     this.#point = point;
 
     const prevEventViewComponent = this.#eventViewComponent;
@@ -40,17 +47,18 @@ export default class PointPresenter{
       }
     });
 
-    if (prevEventViewComponent === null || prevEventViewComponent === null){
+    if (prevEventViewComponent === null && prevPointComponent === null) {
       render(this.#eventViewComponent, this.#pointListContainer);
       return;
     }
 
-    if (this.#pointListContainer.contains(prevEventViewComponent.element)){
-      replace(this.#eventViewComponent, prevEventViewComponent);
+    if (this.#pointListContainer.contains(prevPointComponent?.element)) {
+      replace(this.#pointComponent, prevPointComponent);
+      return;
     }
 
-    if (this.#pointListContainer.contains(prevPointComponent.element)){
-      replace(this.#eventViewComponent, prevPointComponent);
+    if (this.#pointListContainer.contains(prevEventViewComponent?.element)) {
+      replace(this.#eventViewComponent, prevEventViewComponent);
     }
 
     remove(prevEventViewComponent);
@@ -62,12 +70,21 @@ export default class PointPresenter{
     remove(this.#pointComponent);
   }
 
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToPoint();
+    }
+  }
+
   #replacePointToForm() {
     replace(this.#pointComponent, this.#eventViewComponent);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceFormToPoint() {
     replace(this.#eventViewComponent, this.#pointComponent);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {
