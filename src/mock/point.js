@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { getRandomArrayElement, getRandomInteger } from '../utils/common.js';
 import { getOffers } from './offers';
 import { POINT_TYPES, DESCRIPTIONS, DESTINATIONS } from '../const';
@@ -5,7 +6,6 @@ import { getDestinations } from './destination';
 
 const mockPoint = [
   {
-    id: 1,
     type: getRandomArrayElement(POINT_TYPES),
     destination: getDestinations(),
     dateFrom: '2025-04-14T20:18:12.653Z',
@@ -37,7 +37,6 @@ const mockPoint = [
     isFavorite: true,
   },
   {
-    id: 2,
     type: getRandomArrayElement(POINT_TYPES),
     destination: getRandomArrayElement(DESTINATIONS),
     dateFrom: '2025-02-15T12:18:12.653Z',
@@ -69,7 +68,6 @@ const mockPoint = [
     isFavorite: false,
   },
   {
-    id: 3,
     type: getRandomArrayElement(POINT_TYPES),
     destination: getRandomArrayElement(DESTINATIONS),
     dateFrom: '2025-06-10T10:10:10.601Z',
@@ -101,7 +99,6 @@ const mockPoint = [
     isFavorite: true,
   },
   {
-    id: 4,
     type: getRandomArrayElement(POINT_TYPES),
     destination: getRandomArrayElement(DESTINATIONS),
     dateFrom: '2025-01-07T19:18:12.601Z',
@@ -133,7 +130,6 @@ const mockPoint = [
     isFavorite: false,
   },
   {
-    id: 5,
     type: getRandomArrayElement(POINT_TYPES),
     destination: getRandomArrayElement(DESTINATIONS),
     dateFrom: '2025-04-14T20:55:12.601Z',
@@ -166,6 +162,9 @@ const mockPoint = [
   }
 ];
 
-const getRandomPoint = () => getRandomArrayElement(mockPoint);
+const getRandomPoint = () => ({
+  id: nanoid(),
+  ...getRandomArrayElement(mockPoint)
+});
 
 export { getRandomPoint };
