@@ -28,4 +28,15 @@ const calculateFlightTime = (startTime, endTime, unit = 'm') =>{
   }
 };
 
-export { correctDateFormat, extractDate, extractTime, calculateFlightTime, isEventAfter, isEventBefore };
+const calculateDurationInMinutes = (dateFrom, dateTo) => dayjs(dateTo).diff(dateFrom, 'minute');
+
+const sortPointByTime = (pointA, pointB) => {
+  const durationA = calculateDurationInMinutes(pointA.dateFrom, pointA.dateTo);
+  const durationB = calculateDurationInMinutes(pointB.dateFrom, pointB.dateTo);
+
+  return durationB - durationA;
+};
+
+const sortPointByPrice = (pointA, pointB) => pointB.price - pointA.price;
+
+export { correctDateFormat, extractDate, extractTime, calculateFlightTime, isEventAfter, isEventBefore, sortPointByPrice, sortPointByTime };
