@@ -26,7 +26,10 @@
     "node": "20"
   },
   "dependencies": {
+    "-": "^0.0.1",
+    "D": "^1.0.0",
     "dayjs": "^1.11.7",
+    "flatpickr": "^4.6.13",
     "nanoid": "^4.0.0"
   },
   "browserslist": [
