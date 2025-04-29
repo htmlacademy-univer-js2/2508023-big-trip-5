@@ -99,6 +99,6 @@ const mockDestination = [
   }
 ];
 
-const getDestinations = () => mockDestination;
+const getDestinations = () => getRandomArrayElement(DESTINATIONS);
 
 export { mockDestination, getDestinations };

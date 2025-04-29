@@ -1,7 +1,7 @@
 import { getRandomInteger } from '../utils/common.js';
 import { correctDateFormat } from '../utils/point.js';
 import { POINT_TYPES } from '../const.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const BLANK_POINT = {
   id: 0,
@@ -37,7 +37,7 @@ const BLANK_POINT = {
 };
 
 const createAddEventTemplate = (point) => {
-  const {destination, dateFrom, dateTo, price, pictures, offers} = point;
+  const {destination, dateFrom, dateTo, price, pictures, offers, type } = point;
   const newDateFrom = correctDateFormat(dateFrom);
   const newDateTo = correctDateFormat(dateTo);
 
@@ -57,7 +57,7 @@ const createAddEventTemplate = (point) => {
 
         <div class="event__type-item">
           <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-          <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Bus</label>
+          <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
         </div>
 
         <div class="event__type-item">
@@ -90,8 +90,7 @@ const createAddEventTemplate = (point) => {
           <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
         </div>
 
-Дарья Королёва, [07.04.2025 16:42]
-<div class="event__type-item">
+        <div class="event__type-item">
           <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
           <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
         </div>
@@ -106,13 +105,14 @@ const createAddEventTemplate = (point) => {
 
   <div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
-      Flight
+      ${type}
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
     <datalist id="destination-list-1">
-      <option value="Amsterdam"></option>
-      <option value="Geneva"></option>
-      <option value="Chamonix"></option>
+     <option value="France">France</option>
+     <option value="Amsterdam">Amsterdam</option>
+     <option value="Geneva">Geneva</option>
+     <option value="Chamonix">Chamonix</option>
     </datalist>
   </div>
 
@@ -206,25 +206,71 @@ const createAddEventTemplate = (point) => {
   );
 };
 
-export default class AddEventView extends AbstractView{
+export default class AddEventView extends AbstractStatefulView{
   #point = null;
   #onFormSubmit = null;
 
   constructor({point = BLANK_POINT, onFormSubmit}){
     super();
+    this._setState(AddEventView.parsePointToState(point));
     this.#point = point;
     this.#onFormSubmit = onFormSubmit;
-
-    this.element.addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
+    this._restoreHandlers();
   }
 
   get template() {
-    return createAddEventTemplate(this.#point);
+    return createAddEventTemplate(this._state);
+  }
+
+  reset(point) {
+    this.updateElement(
+      AddEventView.parseTaskToState(point),
+    );
+  }
+
+  _restoreHandlers(){
+    this.element.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelectorAll('.event__type-label').forEach((label) => {
+      label.addEventListener('click', this.#pointTypeToggleHandler);
+    });
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#onFormSubmit(this.#point);
+    this.#onFormSubmit(AddEventView.parseStateToPoint(this._state));
   };
+
+  #pointTypeToggleHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.textContent,
+    });
+  };
+
+  #destinationInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      destination: evt.target.value,
+    });
+  };
+
+  #destinationSelectHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      destination: evt.target.value,
+    });
+  };
+
+  static parsePointToState(point) {
+    return {...point};
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+
+    return point;
+  }
 }
