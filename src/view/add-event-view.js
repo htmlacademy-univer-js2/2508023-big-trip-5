@@ -37,7 +37,7 @@ const BLANK_POINT = {
 };
 
 const createAddEventTemplate = (point) => {
-  const {destination, dateFrom, dateTo, price, pictures, offers, type} = point;
+  const {destination, dateFrom, dateTo, price, pictures, offers, type } = point;
   const newDateFrom = correctDateFormat(dateFrom);
   const newDateTo = correctDateFormat(dateTo);
 
@@ -109,9 +109,10 @@ const createAddEventTemplate = (point) => {
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
     <datalist id="destination-list-1">
-      <option value="Amsterdam"></option>
-      <option value="Geneva"></option>
-      <option value="Chamonix"></option>
+     <option value="France">France</option>
+     <option value="Amsterdam">Amsterdam</option>
+     <option value="Geneva">Geneva</option>
+     <option value="Chamonix">Chamonix</option>
     </datalist>
   </div>
 
@@ -221,16 +222,20 @@ export default class AddEventView extends AbstractStatefulView{
     return createAddEventTemplate(this._state);
   }
 
+  reset(point) {
+    this.updateElement(
+      AddEventView.parseTaskToState(point),
+    );
+  }
+
   _restoreHandlers(){
     this.element.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
     this.element.querySelectorAll('.event__type-label').forEach((label) => {
       label.addEventListener('click', this.#pointTypeToggleHandler);
     });
-    /*
-    this.element.querySelectorAll('#destination-list-1').forEach((label) => {
-      label.addEventListener('click', this.#pointDestinationToggleHandler);
-    });*/
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -242,6 +247,20 @@ export default class AddEventView extends AbstractStatefulView{
     evt.preventDefault();
     this.updateElement({
       type: evt.target.textContent,
+    });
+  };
+
+  #destinationInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      destination: evt.target.value,
+    });
+  };
+
+  #destinationSelectHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      destination: evt.target.value,
     });
   };
 
