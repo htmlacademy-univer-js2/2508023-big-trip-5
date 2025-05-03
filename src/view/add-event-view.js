@@ -242,12 +242,12 @@ export default class AddEventView extends AbstractStatefulView{
 
   reset(point) {
     this.updateElement(
-      AddEventView.parseTaskToState(point),
+      AddEventView.parsePointToState(point),
     );
   }
 
   _restoreHandlers(){
-    this.element.addEventListener('submit', this.#formSubmitHandler);
+    this.element.addEventListener('event__save-btn', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
     this.element.querySelectorAll('.event__type-label').forEach((label) => {
       label.addEventListener('click', this.#pointTypeToggleHandler);
