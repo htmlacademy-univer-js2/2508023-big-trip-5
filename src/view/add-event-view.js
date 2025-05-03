@@ -42,6 +42,19 @@ const BLANK_POINT = {
 const createPointOption = (cityName) => `<option value="${cityName}"></option>`;
 const createPointOptionsList = () => DESTINATIONS.map((cityName) => createPointOption(cityName)).join('');
 
+const createPhoto = (photo) => `<img class="event__photo" src=${photo.src} alt="Event photo"></img>`;
+const createPhotosList = (pictures) => pictures.map((photo) => createPhoto(photo)).join('');
+
+const createOffer = (offer) => `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${offer.id - 1}" type="checkbox" name="event-offer-luggage" checked>
+        <label class="event__offer-label" for="event-offer-luggage-${offer.id - 1}">
+          <span class="event__offer-title">${offer.name}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`;
+const createOffers = (offers) => offers.map((offer) => createOffer(offer)).join('');
+
 const createTypePoints = (id, type, currentType) => {
   const isChecked = currentType === type ? 'checked' : '';
 
@@ -110,50 +123,7 @@ const createAddEventTemplate = (point) => {
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-      <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-        <label class="event__offer-label" for="event-offer-luggage-1">
-          <span class="event__offer-title">${offers[getRandomInteger(0,4)].type}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offers[getRandomInteger(0, 4)].offer[getRandomInteger(0, 4)].price}</span>
-        </label>
-      </div>
-
-      <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-        <label class="event__offer-label" for="event-offer-comfort-1">
-          <span class="event__offer-title">${offers[getRandomInteger(0,4)].type}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offers[getRandomInteger(0, 4)].offer[getRandomInteger(0, 4)].price}</span>
-        </label>
-      </div>
-
-      <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-        <label class="event__offer-label" for="event-offer-meal-1">
-          <span class="event__offer-title">${offers[getRandomInteger(0,4)].type}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offers[getRandomInteger(0, 4)].offer[getRandomInteger(0, 4)].price}</span>
-        </label>
-      </div>
-
-      <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-        <label class="event__offer-label" for="event-offer-seats-1">
-          <span class="event__offer-title">${offers[getRandomInteger(0,4)].type}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offers[getRandomInteger(0, 4)].offer[getRandomInteger(0, 4)].price}</span>
-        </label>
-      </div>
-
-      <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-        <label class="event__offer-label" for="event-offer-train-1">
-          <span class="event__offer-title">${offers[getRandomInteger(0,4)].type}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offers[getRandomInteger(0, 4)].offer[getRandomInteger(0, 4)].price}</span>
-        </label>
-      </div>
+      ${createOffers(offers[0].offer)}
     </div>
   </section>
 
@@ -163,11 +133,7 @@ const createAddEventTemplate = (point) => {
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        <img class="event__photo" src=${pictures[getRandomInteger(0,4)].src} alt="Event photo">
-        <img class="event__photo" src=${pictures[getRandomInteger(0,4)].src} alt="Event photo">
-        <img class="event__photo" src=${pictures[getRandomInteger(0,4)].src} alt="Event photo">
-        <img class="event__photo" src=${pictures[getRandomInteger(0,4)].src} alt="Event photo">
-        <img class="event__photo" src=${pictures[getRandomInteger(0,4)].src} alt="Event photo">
+        ${createPhotosList(pictures)}
       </div>
     </div>
   </section>

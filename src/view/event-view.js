@@ -30,7 +30,7 @@ const createEventTemplate = (point) => {
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
       <li class="event__offer">
-        <span class="event__offer-title">${getRandomArrayElement(offers).type}</span>
+        <span class="event__offer-title">${getRandomArrayElement(getRandomArrayElement(offers).offer).name}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${getRandomArrayElement(offers).offer[getRandomInteger(0,4)].price}</span>
       </li>
