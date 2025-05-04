@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils/common.js';
+import { getRandomInteger, generateOffers, generatePictures } from '../utils/common.js';
 import { correctDateFormat } from '../utils/point.js';
 import { POINT_TYPES, DESTINATIONS } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
@@ -123,7 +123,7 @@ const createAddEventTemplate = (point) => {
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-      ${createOffers(offers[0].offer)}
+      ${createOffers(offers[getRandomInteger(0,4)].offer)}
     </div>
   </section>
 
@@ -215,9 +215,7 @@ export default class AddEventView extends AbstractStatefulView{
   _restoreHandlers(){
     this.element.addEventListener('event__save-btn', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
-    this.element.querySelectorAll('.event__type-label').forEach((label) => {
-      label.addEventListener('click', this.#pointTypeToggleHandler);
-    });
+    this.element.querySelector('.event__type-list').addEventListener('change', this.#pointTypeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
     this.#setDatepickerStart();
@@ -232,7 +230,8 @@ export default class AddEventView extends AbstractStatefulView{
   #pointTypeToggleHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      type: evt.target.textContent,
+      type: evt.target.value,
+      offers: generateOffers(evt.target.value),
     });
   };
 
@@ -247,6 +246,7 @@ export default class AddEventView extends AbstractStatefulView{
     evt.preventDefault();
     this.updateElement({
       destination: evt.target.value,
+      pictures: generatePictures(),
     });
   };
 
