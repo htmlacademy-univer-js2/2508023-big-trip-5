@@ -13,7 +13,7 @@ const createEventTemplate = (point) => {
   <div class="event">
     <time class="event__date" datetime="2019-03-18">${date}</time>
     <div class="event__type">
-      <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+      <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
     <h3 class="event__title">${type}</h3>
     <div class="event__schedule">
@@ -30,7 +30,7 @@ const createEventTemplate = (point) => {
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
       <li class="event__offer">
-        <span class="event__offer-title">${getRandomArrayElement(offers).type}</span>
+        <span class="event__offer-title">${getRandomArrayElement(getRandomArrayElement(offers).offer).name}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${getRandomArrayElement(offers).offer[getRandomInteger(0,4)].price}</span>
       </li>
