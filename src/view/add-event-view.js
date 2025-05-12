@@ -237,6 +237,9 @@ export default class AddEventView extends AbstractStatefulView{
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
+    if (!evt.target.value){
+      return;
+    }
     this._setState({
       destination: evt.target.value,
     });
@@ -244,6 +247,9 @@ export default class AddEventView extends AbstractStatefulView{
 
   #destinationSelectHandler = (evt) => {
     evt.preventDefault();
+    if (!evt.target.value){
+      return;
+    }
     this.updateElement({
       destination: evt.target.value,
       pictures: generatePictures(),
