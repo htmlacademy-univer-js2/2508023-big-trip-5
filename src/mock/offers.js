@@ -7,27 +7,27 @@ const mockOffers = [
     offer: [
       {
         id: 1,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[0],
         price: getRandomInteger(1000, 2000),
       },
       {
         id: 2,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[5],
         price: getRandomInteger(1500, 2000),
       },
       {
         id: 3,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[2],
         price: getRandomInteger(1000, 1500),
       },
       {
         id: 4,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[3],
         price: getRandomInteger(100, 2000),
       },
       {
         id: 5,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[1],
         price: getRandomInteger(100, 200),
       }
     ]
@@ -37,27 +37,27 @@ const mockOffers = [
     offer: [
       {
         id: 1,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[0],
         price: getRandomInteger(1000, 2000),
       },
       {
         id: 2,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[1],
         price: getRandomInteger(1500, 2000),
       },
       {
         id: 3,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[5],
         price: getRandomInteger(1000, 1500),
       },
       {
         id: 4,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[2],
         price: getRandomInteger(100, 2000),
       },
       {
         id: 5,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[4],
         price: getRandomInteger(100, 200),
       }
     ]
@@ -67,27 +67,27 @@ const mockOffers = [
     offer: [
       {
         id: 1,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[3],
         price: getRandomInteger(1000, 2000),
       },
       {
         id: 2,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[2],
         price: getRandomInteger(1500, 2000),
       },
       {
         id: 3,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[4],
         price: getRandomInteger(1000, 1500),
       },
       {
         id: 4,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[0],
         price: getRandomInteger(100, 2000),
       },
       {
         id: 5,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[5],
         price: getRandomInteger(100, 200),
       }
     ]
@@ -97,27 +97,27 @@ const mockOffers = [
     offer: [
       {
         id: 1,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[1],
         price: getRandomInteger(1000, 2000),
       },
       {
         id: 2,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[5],
         price: getRandomInteger(1500, 2000),
       },
       {
         id: 3,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[2],
         price: getRandomInteger(1000, 1500),
       },
       {
         id: 4,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[0],
         price: getRandomInteger(100, 2000),
       },
       {
         id: 5,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[4],
         price: getRandomInteger(100, 200),
       }
     ]
@@ -127,27 +127,27 @@ const mockOffers = [
     offer: [
       {
         id: 1,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[0],
         price: getRandomInteger(1000, 2000),
       },
       {
         id: 2,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[5],
         price: getRandomInteger(1500, 2000),
       },
       {
         id: 3,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[2],
         price: getRandomInteger(1000, 1500),
       },
       {
         id: 4,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[3],
         price: getRandomInteger(100, 2000),
       },
       {
         id: 5,
-        name: getRandomArrayElement(OFFERS),
+        name: OFFERS[4],
         price: getRandomInteger(100, 200),
       }
     ]
