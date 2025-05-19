@@ -9,8 +9,6 @@ const getRandomInteger = (a = 0, b = 1) => {
 
 const getRandomArrayElement = (items) => items[getRandomInteger(0, items.length - 1)];
 
-const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
-
 const makeOffers = () => {
   const offers = [];
   let index = 0;
@@ -51,4 +49,4 @@ const generatePictures = () => {
   return pictures;
 };
 
-export { getRandomArrayElement, getRandomInteger, updateItem, generateOffers, generatePictures };
+export { getRandomArrayElement, getRandomInteger, generateOffers, generatePictures };

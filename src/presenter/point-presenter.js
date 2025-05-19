@@ -1,4 +1,5 @@
 import { replace, render, remove } from '../framework/render';
+import { UserAction, UpdateType } from '../const.js';
 import AddEventView from '../view/add-event-view';
 import EventView from '../view/event-view';
 
@@ -41,7 +42,10 @@ export default class PointPresenter{
     this.#pointComponent = new AddEventView({
       point: this.#point,
       onFormSubmit: () => {
-        this.#handleDataChange(this.#point);
+        this.#handleDataChange(
+          UserAction.UPDATE_TASK,
+          UpdateType.MINOR,
+          this.#point);
         this.#replaceFormToPoint();
         document.removeEventListener('keydown', this.#escKeyDownHandler);
       }
@@ -97,6 +101,9 @@ export default class PointPresenter{
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite});
   };
 }
