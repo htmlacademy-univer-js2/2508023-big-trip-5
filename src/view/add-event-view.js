@@ -2,6 +2,7 @@ import { getRandomInteger, generateOffers, generatePictures } from '../utils/com
 import { correctDateFormat } from '../utils/point.js';
 import { POINT_TYPES, DESTINATIONS } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -94,7 +95,7 @@ const createAddEventTemplate = (point) => {
     <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination === null ? '' : destination}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination === null ? '' : destination)}" list="destination-list-1">
     <datalist id="destination-list-1">
     ${optionsList}
     </datalist>
