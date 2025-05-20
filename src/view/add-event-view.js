@@ -147,13 +147,15 @@ export default class AddEventView extends AbstractStatefulView{
   #onFormSubmit = null;
   #datepickerStart = null;
   #datepickerEnd = null;
+  #handleDeleteClick = null;
 
-  constructor({point = BLANK_POINT, onFormSubmit}){
+  constructor({point = BLANK_POINT, onFormSubmit, onDeleteClick}){
     super();
     this._setState(AddEventView.parsePointToState(point));
     this.#point = point;
     this.#onFormSubmit = onFormSubmit;
     this._restoreHandlers();
+    this.#handleDeleteClick = onDeleteClick;
   }
 
   get template() {
@@ -214,13 +216,18 @@ export default class AddEventView extends AbstractStatefulView{
 
   _restoreHandlers(){
     this.element.addEventListener('event__save-btn', this.#formSubmitHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formResetClickHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#pointTypeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
   }
+
+  #formResetClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(AddEventView.parseStateToPoint(this._state));
+  };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();

@@ -51,11 +51,6 @@ export default class BoardPresenter {
     this.#pointsPresenters.set(point.id, pointPresenter);
   }
 
-  #clearPointsList(){
-    this.#pointsPresenters.forEach((presenter) => presenter.destroy());
-    this.#pointsPresenters.clear();
-  }
-
   #renderPointsList(){
     render(this.#eventListComponent, this.#boardComponent.element);
 
