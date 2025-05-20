@@ -39,4 +39,17 @@ const sortPointByTime = (pointA, pointB) => {
 
 const sortPointByPrice = (pointA, pointB) => pointB.price - pointA.price;
 
-export { correctDateFormat, extractDate, extractTime, calculateFlightTime, isEventAfter, isEventBefore, sortPointByPrice, sortPointByTime };
+const sortPointByDay = (pointA, pointB) => {
+  const dateA = dayjs(pointA.dateFrom, 'MMM DD');
+  const dateB = dayjs(pointB.dateFrom, 'MMM DD');
+
+  if (dateA.isBefore(dateB)) {
+    return -1;
+  } else if (dateA.isAfter(dateB)) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
+export { correctDateFormat, extractDate, extractTime, calculateFlightTime, isEventAfter, isEventBefore, sortPointByPrice, sortPointByTime, sortPointByDay };

@@ -1,4 +1,5 @@
 import { replace, render, remove } from '../framework/render';
+import { UserAction, UpdateType } from '../const.js';
 import AddEventView from '../view/add-event-view';
 import EventView from '../view/event-view';
 
@@ -40,11 +41,8 @@ export default class PointPresenter{
 
     this.#pointComponent = new AddEventView({
       point: this.#point,
-      onFormSubmit: () => {
-        this.#handleDataChange(this.#point);
-        this.#replaceFormToPoint();
-        document.removeEventListener('keydown', this.#escKeyDownHandler);
-      }
+      onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (prevEventViewComponent === null && prevPointComponent === null) {
@@ -96,7 +94,29 @@ export default class PointPresenter{
     }
   };
 
+  #handleFormSubmit = (update) => {
+    const isPatchUpdate = (this.#point.type !== update.type) || (this.#point.destination !== update.destination);
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
+      update
+    );
+    this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite});
   };
 }
