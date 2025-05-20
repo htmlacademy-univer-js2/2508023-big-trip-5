@@ -70,6 +70,7 @@ const createAddEventTemplate = (point) => {
   const {destination, dateFrom, dateTo, price, pictures, offers, type, id } = point;
   const newDateFrom = correctDateFormat(dateFrom);
   const newDateTo = correctDateFormat(dateTo);
+  const optionsList = createPointOptionsList();
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -93,18 +94,18 @@ const createAddEventTemplate = (point) => {
     <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination === null ? '' : destination}" list="destination-list-1">
     <datalist id="destination-list-1">
-    ${createPointOptionsList()}
+    ${optionsList}
     </datalist>
   </div>
 
   <div class="event__field-group  event__field-group--time">
     <label class="visually-hidden" for="event-start-time-1">From</label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${newDateFrom}>
+    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${newDateFrom === 'Invalid Date' ? '' : newDateFrom}>
     &mdash;
     <label class="visually-hidden" for="event-end-time-1">To</label>
-    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${newDateTo}>
+    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${newDateTo === 'Invalid Date' ? '' : newDateTo}>
   </div>
 
   <div class="event__field-group  event__field-group--price">
@@ -123,7 +124,7 @@ const createAddEventTemplate = (point) => {
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-      ${createOffers(offers[getRandomInteger(0,4)].offer)}
+      ${offers === null ? '' : createOffers(offers[getRandomInteger(0,4)].offer)}
     </div>
   </section>
 
@@ -236,6 +237,9 @@ export default class AddEventView extends AbstractStatefulView{
 
   #pointTypeToggleHandler = (evt) => {
     evt.preventDefault();
+    if (!evt.target.value){
+      return;
+    }
     this.updateElement({
       type: evt.target.value,
       offers: generateOffers(evt.target.value),
