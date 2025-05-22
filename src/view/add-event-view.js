@@ -44,7 +44,7 @@ const BLANK_POINT = {
 
 const createPointOption = (city) => `<option value="${city.name}"></option>`;
 
-const createPointOptionsList = (destinations) => destinations.map((city) => createPointOption(city)).join('');
+const createPointOptionsList = (destinations) => destinations === undefined ? null : destinations.map((city) => createPointOption(city)).join('');
 
 const createPhotosTemplate = (photos) => {
   let photosTemplate = '';
@@ -58,7 +58,7 @@ const createPhotosTemplate = (photos) => {
 };
 
 const createPhotosList = (destination) => {
-  if (!destination.pictures) {
+  if (destination === null || !destination.pictures) {
     return '';
   }
   return `<div class="event__photos-container">
@@ -118,7 +118,7 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
     <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination === null ? '' : destination)}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination ? he.encode(destination.name || '') : ''}" list="destination-list-1">
     <datalist id="destination-list-1">
     ${optionsList}
     </datalist>
@@ -154,13 +154,8 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
 
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${destination}</p>
-
-    <div class="event__photos-container">
-      <div class="event__photos-tape">
-        ${createPhotosList(destination)}
-      </div>
-    </div>
+    <p class="event__destination-description">${destination?.description ?? ''}</p>
+    ${createPhotosList(destination)}
   </section>
 </section>
 </form>`
@@ -247,7 +242,7 @@ export default class AddEventView extends AbstractStatefulView{
     this.element.addEventListener('event__save-btn', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formResetClickHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#pointTypeToggleHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
+    //this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
@@ -292,31 +287,23 @@ export default class AddEventView extends AbstractStatefulView{
     }
 
     const newDestination = this.#possibleDestinations.find((destination) => destination.name === evt.target.value);
-
     this.updateElement({
+      destination: {
+        description: newDestination.description || '',
+        name: newDestination.name || '',
+        pictures: newDestination.pictures || [],
+      },
+    });
+    /*
+    ({
       destination: {
         description: newDestination.description,
         name: newDestination.name,
         pictures: newDestination.pictures,
       },
     });
+    */
   };
-  /*
-  #offerChangeHandler = (evt) => {
-    evt.preventDefault();
-
-    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-
-    const checkedOffersValues = checkedOffers.map((offer) => ({
-      id: Number(offer.dataset.id),
-      title: offer.dataset.title,
-      price: Number(offer.dataset.price),
-    }));
-
-    this.updateData({
-      offers: checkedOffersValues,
-    }, true);
-  };*/
 
 
   static parsePointToState(point) {

@@ -44,9 +44,12 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
-render(newPointButtonComponent, siteHeaderElement);
+//render(newPointButtonComponent, siteHeaderElement);
 
 boardPresenter.init();
 filterPresenter.init();
-pointModel.init();
+pointModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, siteHeaderElement);
+  });
 document.querySelector('.trip-main__event-add-btn').remove();
