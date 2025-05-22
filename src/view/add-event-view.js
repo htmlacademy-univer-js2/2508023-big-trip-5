@@ -95,6 +95,7 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
   const newDateFrom = correctDateFormat(dateFrom, DATE_TIME_FORMAT);
   const newDateTo = correctDateFormat(dateTo, DATE_TIME_FORMAT);
   const optionsList = createPointOptionsList(possibleDestinations);
+  console.log(newDateFrom, dateFrom);
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -242,7 +243,6 @@ export default class AddEventView extends AbstractStatefulView{
     this.element.addEventListener('event__save-btn', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formResetClickHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#pointTypeToggleHandler);
-    //this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
@@ -268,16 +268,6 @@ export default class AddEventView extends AbstractStatefulView{
       offers: this.#possibleOffers[evt.target.value],
     }
     );
-  };
-
-  #destinationInputHandler = (evt) => {
-    evt.preventDefault();
-    if (!evt.target.value){
-      return;
-    }
-    this._setState({
-      destination: evt.target.value,
-    });
   };
 
   #destinationSelectHandler = (evt) => {
