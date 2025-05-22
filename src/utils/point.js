@@ -9,9 +9,9 @@ const extractDate = (date) => dayjs.utc(date).format('MMM DD');
 
 const extractTime = (date) => dayjs.utc(date).format('HH:mm');
 
-const isEventAfter = (date) => date && dayjs().isAfter(date, 'D');
+const isEventAfter = (date) => date && dayjs(date).isAfter(dayjs());
 
-const isEventBefore = (date) => date && dayjs().isBefore(date, 'D');
+const isEventBefore = (date) => date && dayjs(date).isBefore(dayjs());
 
 
 const calculateFlightTime = (startTime, endTime, unit = 'm') =>{
