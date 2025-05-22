@@ -1,11 +1,13 @@
-import { getRandomInteger, generateOffers, generatePictures } from '../utils/common.js';
+import { getRandomInteger } from '../utils/common.js';
 import { correctDateFormat } from '../utils/point.js';
-import { POINT_TYPES, DESTINATIONS } from '../const.js';
+import { POINT_TYPES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import dayjs from 'dayjs';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const DATE_TIME_FORMAT = 'DD/MM/YY HH:mm';
 
 const BLANK_POINT = {
   id: 0,
@@ -40,20 +42,41 @@ const BLANK_POINT = {
   isFavorite: false,
 };
 
-const createPointOption = (cityName) => `<option value="${cityName}"></option>`;
-const createPointOptionsList = () => DESTINATIONS.map((cityName) => createPointOption(cityName)).join('');
+const createPointOption = (city) => `<option value="${city.name}"></option>`;
 
-const createPhoto = (photo) => `<img class="event__photo" src=${photo.src} alt="Event photo"></img>`;
-const createPhotosList = (pictures) => pictures.map((photo) => createPhoto(photo)).join('');
+const createPointOptionsList = (destinations) => destinations.map((city) => createPointOption(city)).join('');
+
+const createPhotosTemplate = (photos) => {
+  let photosTemplate = '';
+
+  photos.forEach((photo) => {
+    const { src: source, description: alt } = photo;
+    const photoTemplate = `<img class="event__photo" src="${source}" alt="${alt}">`;
+    photosTemplate += photoTemplate;
+  });
+  return photosTemplate;
+};
+
+const createPhotosList = (destination) => {
+  if (!destination.pictures) {
+    return '';
+  }
+  return `<div class="event__photos-container">
+<div class="event__photos-tape">
+  ${createPhotosTemplate(destination.pictures)}
+</div>
+</div>`;
+};
 
 const createOffer = (offer) => `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${offer.id - 1}" type="checkbox" name="event-offer-luggage" checked>
         <label class="event__offer-label" for="event-offer-luggage-${offer.id - 1}">
-          <span class="event__offer-title">${offer.name}</span>
+          <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${offer.price}</span>
         </label>
       </div>`;
+
 const createOffers = (offers) => offers.map((offer) => createOffer(offer)).join('');
 
 const createTypePoints = (id, type, currentType) => {
@@ -67,11 +90,11 @@ const createTypePoints = (id, type, currentType) => {
 const typesToLowerCase = POINT_TYPES.map((type) => type.toLowerCase());
 const createTypePointsList = (id, currentType) => typesToLowerCase.map((type) => createTypePoints(id, type, currentType)).join('');
 
-const createAddEventTemplate = (point) => {
-  const {destination, dateFrom, dateTo, price, pictures, offers, type, id } = point;
-  const newDateFrom = correctDateFormat(dateFrom);
-  const newDateTo = correctDateFormat(dateTo);
-  const optionsList = createPointOptionsList();
+const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => {
+  const {dateFrom, dateTo, price, type, id, offers, destination } = point;
+  const newDateFrom = correctDateFormat(dateFrom, DATE_TIME_FORMAT);
+  const newDateTo = correctDateFormat(dateTo, DATE_TIME_FORMAT);
+  const optionsList = createPointOptionsList(possibleDestinations);
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -125,17 +148,17 @@ const createAddEventTemplate = (point) => {
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-      ${offers === null ? '' : createOffers(offers[getRandomInteger(0,4)].offer)}
+      ${offers === null ? '' : createOffers(possibleOffers[type])}
     </div>
   </section>
 
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${pictures[getRandomInteger(0,4)].description}</p>
+    <p class="event__destination-description">${destination}</p>
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        ${createPhotosList(pictures)}
+        ${createPhotosList(destination)}
       </div>
     </div>
   </section>
@@ -150,18 +173,22 @@ export default class AddEventView extends AbstractStatefulView{
   #datepickerStart = null;
   #datepickerEnd = null;
   #handleDeleteClick = null;
+  #possibleOffers = null;
+  #possibleDestinations = null;
 
-  constructor({point = BLANK_POINT, onFormSubmit, onDeleteClick}){
+  constructor({point = BLANK_POINT, possibleOffers, possibleDestinations, onFormSubmit, onDeleteClick}){
     super();
     this._setState(AddEventView.parsePointToState(point));
     this.#point = point;
+    this.#possibleOffers = possibleOffers;
+    this.#possibleDestinations = possibleDestinations;
     this.#onFormSubmit = onFormSubmit;
     this._restoreHandlers();
     this.#handleDeleteClick = onDeleteClick;
   }
 
   get template() {
-    return createAddEventTemplate(this._state);
+    return createAddEventTemplate(this._state, this.#possibleOffers, this.#possibleDestinations);
   }
 
   #setDatepickerStart = () => {
@@ -175,7 +202,7 @@ export default class AddEventView extends AbstractStatefulView{
         dateFormat: 'd/m/y H:i',
         ['time_24hr']: true,
         enableTime: true,
-        defaultDate: this._state.dateFrom,
+        defaultDate: dayjs(this._state.dateFrom).toDate(),
         onChange: this.#dateStartChangeHandler,
       },
     );
@@ -192,7 +219,7 @@ export default class AddEventView extends AbstractStatefulView{
         dateFormat: 'd/m/y H:i',
         ['time_24hr']: true,
         enableTime: true,
-        defaultDate: this._state.dateTo,
+        defaultDate: dayjs(this._state.dateTo).toDate(),
         onChange: this.#dateEndChangeHandler,
       },
     );
@@ -200,13 +227,13 @@ export default class AddEventView extends AbstractStatefulView{
 
   #dateStartChangeHandler = ([chosenDate]) => {
     this.updateElement({
-      dateFrom: chosenDate,
+      dateFrom: dayjs(chosenDate),
     });
   };
 
   #dateEndChangeHandler = ([chosenDate]) => {
     this.updateElement({
-      dateTo: chosenDate,
+      dateTo: dayjs(chosenDate),
     });
   };
 
@@ -243,8 +270,9 @@ export default class AddEventView extends AbstractStatefulView{
     }
     this.updateElement({
       type: evt.target.value,
-      offers: generateOffers(evt.target.value),
-    });
+      offers: this.#possibleOffers[evt.target.value],
+    }
+    );
   };
 
   #destinationInputHandler = (evt) => {
@@ -262,11 +290,33 @@ export default class AddEventView extends AbstractStatefulView{
     if (!evt.target.value){
       return;
     }
+
+    const newDestination = this.#possibleDestinations.find((destination) => destination.name === evt.target.value);
+
     this.updateElement({
-      destination: evt.target.value,
-      pictures: generatePictures(),
+      destination: {
+        description: newDestination.description,
+        name: newDestination.name,
+        pictures: newDestination.pictures,
+      },
     });
   };
+  /*
+  #offerChangeHandler = (evt) => {
+    evt.preventDefault();
+
+    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+
+    const checkedOffersValues = checkedOffers.map((offer) => ({
+      id: Number(offer.dataset.id),
+      title: offer.dataset.title,
+      price: Number(offer.dataset.price),
+    }));
+
+    this.updateData({
+      offers: checkedOffersValues,
+    }, true);
+  };*/
 
 
   static parsePointToState(point) {

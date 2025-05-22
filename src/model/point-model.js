@@ -1,7 +1,7 @@
 import Observable from '../framework/observable.js';
 import { mockDestination } from '../mock/destination';
 import { mockOffers } from '../mock/offers';
-import { correctDateFormat } from '../utils/point.js';
+import dayjs from 'dayjs';
 import { UpdateType } from '../const.js';
 
 export default class PointModel extends Observable{
@@ -21,8 +21,8 @@ export default class PointModel extends Observable{
       point,
       {
         price: point['base_price'],
-        dateFrom: correctDateFormat(point['date_from']),
-        dateTo: correctDateFormat(point['date_to']),
+        dateFrom: dayjs(point['date_from']),
+        dateTo: dayjs(point['date_to']),
         isFavorite: point['is_favorite'],
       },
     );
@@ -33,6 +33,15 @@ export default class PointModel extends Observable{
     delete adaptedEvent['is_favorite'];
 
     return adaptedEvent;
+  };
+
+  #adaptOffersToClient = (serverOffers) => {
+    const adaptedOffers = {};
+    serverOffers.forEach((serverOffer) => {
+      adaptedOffers[serverOffer.type] = serverOffer.offers;
+    });
+
+    return adaptedOffers;
   };
 
   get points() {
@@ -47,12 +56,25 @@ export default class PointModel extends Observable{
     return this.#offers;
   }
 
-  async init() {
+  async init () {
     try {
-      const points = await this.#pointsApiService.tasks;
-      this.#points = points.map(this.#adaptPointsToClient);
-    } catch(err) {
+      const events = await this.#pointsApiService.points;
+      this.#points = events.map(this.#adaptPointsToClient);
+    } catch (err) {
       this.#points = [];
+    }
+
+    try {
+      const offers = await this.#pointsApiService.offers;
+      this.#offers = this.#adaptOffersToClient(offers);
+    } catch (err) {
+      this.#offers = [];
+    }
+
+    try {
+      this.#destinations = await this.#pointsApiService.destinations;
+    } catch {
+      this.#destinations = [];
     }
 
     this._notify(UpdateType.INIT);
