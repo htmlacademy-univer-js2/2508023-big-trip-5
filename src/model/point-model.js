@@ -80,26 +80,28 @@ export default class PointModel extends Observable{
     this._notify(UpdateType.INIT);
   }
 
-  async updatePoint(updateType, update) {
-    const index = this.#points.findIndex((task) => task.id === update.id);
+  updatePoint = async (updateType, update) => {
+    const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexisting event');
     }
 
     try {
-      const response = await this.#pointsApiService.updateTask(update);
-      const updatedTask = this.#adaptPointsToClient(response);
+      const response = await this.#pointsApiService.updatePoint(update);
+      const updatedPoint = this.#adaptPointsToClient(response);
+
       this.#points = [
         ...this.#points.slice(0, index),
-        updatedTask,
+        updatedPoint,
         ...this.#points.slice(index + 1),
       ];
-      this._notify(updateType, updatedTask);
-    } catch(err) {
-      throw new Error('Can\'t update task');
+
+      this._notify(updateType, updatedPoint);
+    } catch (err) {
+      throw new Error('Can\'t update event');
     }
-  }
+  };
 
   addPoint(updateType, update) {
     this.#points = [
@@ -111,10 +113,10 @@ export default class PointModel extends Observable{
   }
 
   deletePoint(updateType, update) {
-    const index = this.#points.findIndex((task) => task.id === update.id);
+    const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
+      throw new Error('Can\'t delete unexisting point');
     }
 
     this.#points = [

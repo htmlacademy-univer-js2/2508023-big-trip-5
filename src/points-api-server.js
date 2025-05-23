@@ -23,12 +23,12 @@ export default class PointsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-  async updatePoint(point) {
+  async updatePoint(point){
     const response = await this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
-      headers: new Headers({'Content-Type': 'application/json'}),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
     const parsedResponse = await ApiService.parseResponse(response);
@@ -45,7 +45,7 @@ export default class PointsApiService extends ApiService {
       'is_favorite': point.isFavorite,
     };
 
-    delete adaptedData.basePrice;
+    delete adaptedData.price;
     delete adaptedData.dateFrom;
     delete adaptedData.dateTo;
     delete adaptedData.isFavorite;
