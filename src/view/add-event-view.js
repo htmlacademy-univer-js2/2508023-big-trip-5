@@ -7,8 +7,6 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-const DATE_TIME_FORMAT = 'DD/MM/YY HH:mm';
-
 const BLANK_POINT = {
   id: 0,
   type: POINT_TYPES[0],
@@ -92,10 +90,9 @@ const createTypePointsList = (id, currentType) => typesToLowerCase.map((type) =>
 
 const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => {
   const {dateFrom, dateTo, price, type, id, offers, destination } = point;
-  const newDateFrom = correctDateFormat(dateFrom, DATE_TIME_FORMAT);
-  const newDateTo = correctDateFormat(dateTo, DATE_TIME_FORMAT);
+  const newDateFrom = correctDateFormat(dateFrom);
+  const newDateTo = correctDateFormat(dateTo);
   const optionsList = createPointOptionsList(possibleDestinations);
-  console.log(newDateFrom, dateFrom);
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -284,15 +281,6 @@ export default class AddEventView extends AbstractStatefulView{
         pictures: newDestination.pictures || [],
       },
     });
-    /*
-    ({
-      destination: {
-        description: newDestination.description,
-        name: newDestination.name,
-        pictures: newDestination.pictures,
-      },
-    });
-    */
   };
 
 

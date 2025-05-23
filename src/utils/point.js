@@ -3,7 +3,7 @@ import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
-const correctDateFormat = (date) => dayjs.utc(date).format('d/m/y H:i');
+const correctDateFormat = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 
 const extractDate = (date) => dayjs.utc(date).format('MMM DD');
 
