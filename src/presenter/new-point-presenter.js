@@ -16,12 +16,15 @@ export default class NewPointPresenter {
     this.#handleDestroy = onDestroy;
   }
 
-  init() {
+  init(point, offers, destinations) {
     if (this.#pointEditComponent !== null) {
       return;
     }
 
     this.#pointEditComponent = new AddEventView({
+      point: point,
+      possibleDestinations: destinations,
+      possibleOffers: offers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick
     });

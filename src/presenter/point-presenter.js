@@ -24,7 +24,7 @@ export default class PointPresenter{
     this.#handleModeChange = onModeChange;
   }
 
-  init(point) {
+  init(point, offers, destinations) {
     this.#point = point;
 
     const prevEventViewComponent = this.#eventViewComponent;
@@ -32,6 +32,7 @@ export default class PointPresenter{
 
     this.#eventViewComponent = new EventView({
       point: this.#point,
+      possibleOffers: offers,
       onOpenEventClick: () => {
         this.#replacePointToForm();
         document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -41,6 +42,8 @@ export default class PointPresenter{
 
     this.#pointComponent = new AddEventView({
       point: this.#point,
+      possibleDestinations: destinations,
+      possibleOffers: offers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick
     });
