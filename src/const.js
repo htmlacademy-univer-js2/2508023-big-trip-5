@@ -1,3 +1,5 @@
+import { getRandomInteger } from './utils/common.js';
+
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const DESCRIPTIONS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -42,4 +44,37 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export { POINT_TYPES, DESCRIPTIONS, DESTINATIONS, OFFERS, FilterType, SortType, UpdateType, UserAction };
+const BLANK_POINT = {
+  id: 0,
+  type: POINT_TYPES[0],
+  destination: null,
+  dateFrom: '',
+  dateTo: '',
+  offers: null,
+  price: 0,
+  pictures: [
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
+      description: ''
+    }
+  ],
+  isFavorite: false,
+};
+
+export { POINT_TYPES, DESCRIPTIONS, DESTINATIONS, OFFERS, FilterType, SortType, UpdateType, UserAction, BLANK_POINT };

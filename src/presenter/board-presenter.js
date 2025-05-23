@@ -9,6 +9,7 @@ import NewPointPresenter from './new-point-presenter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortPointByTime, sortPointByPrice, sortPointByDay } from '../utils/point.js';
 import { filter } from '../utils/filter.js';
+import { BLANK_POINT } from '../const.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -66,7 +67,8 @@ export default class BoardPresenter {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init();
+    this.#newPointPresenter.init(BLANK_POINT, this.#pointModel.offers,
+      this.#pointModel.destinations);
   }
 
   #renderPoint(point){

@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils/common.js';
+import { BLANK_POINT } from '../const.js';
 import { correctDateFormat } from '../utils/point.js';
 import { POINT_TYPES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
@@ -7,38 +7,6 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-const BLANK_POINT = {
-  id: 0,
-  type: POINT_TYPES[0],
-  destination: null,
-  dateFrom: '',
-  dateTo: '',
-  offers: null,
-  price: 0,
-  pictures: [
-    {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
-      description: ''
-    },
-    {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
-      description: ''
-    },
-    {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
-      description: ''
-    },
-    {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
-      description: ''
-    },
-    {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger()}`,
-      description: ''
-    }
-  ],
-  isFavorite: false,
-};
 
 const createPointOption = (city) => `<option value="${city.name}"></option>`;
 
@@ -240,6 +208,7 @@ export default class AddEventView extends AbstractStatefulView{
     this.element.addEventListener('event__save-btn', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formResetClickHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#pointTypeToggleHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
@@ -265,6 +234,16 @@ export default class AddEventView extends AbstractStatefulView{
       offers: this.#possibleOffers[evt.target.value],
     }
     );
+  };
+
+  #destinationInputHandler = (evt) => {
+    evt.preventDefault();
+    if (!evt.target.value){
+      return;
+    }
+    this._setState({
+      destination: evt.target.value,
+    });
   };
 
   #destinationSelectHandler = (evt) => {
