@@ -1,9 +1,25 @@
 import { extractDate, extractTime, calculateFlightTime } from '../utils/point.js';
-import { getRandomArrayElement, getRandomInteger } from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createEventTemplate = (point) => {
-  const {dateFrom, dateTo, price, offers, type, isFavorite} = point;
+const createOffers = (offers) => {
+  let newOffers = '';
+
+  offers.forEach((offer) => {
+    const { title, price } = offer;
+
+    const offerTemplate = `<li class="event__offer">
+        <span class="event__offer-title">${title}</span>
+                    &plus;&euro;&nbsp;
+        <span class="event__offer-price">${price}</span>
+        </li>`;
+
+    newOffers += offerTemplate;
+  });
+  return newOffers;
+};
+
+const createEventTemplate = (point, offers) => {
+  const {dateFrom, dateTo, price, type, isFavorite} = point;
   const date = extractDate(dateFrom);
   const startTime = extractTime(dateFrom);
   const endTime = extractTime(dateTo);
@@ -29,11 +45,7 @@ const createEventTemplate = (point) => {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      <li class="event__offer">
-        <span class="event__offer-title">${getRandomArrayElement(getRandomArrayElement(offers).offer).name}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${getRandomArrayElement(offers).offer[getRandomInteger(0,4)].price}</span>
-      </li>
+      ${createOffers(offers[type])}
     </ul>
     <button class="event__favorite-btn event__favorite-btn${activeFavorite}" type="button">
       <span class="visually-hidden">Add to favorite</span>
@@ -52,10 +64,12 @@ export default class EventView extends AbstractView {
   #point = null;
   #onOpenEventClick = null;
   #handleFavoriteClick = null;
+  #possibleOffers = null;
 
-  constructor({point, onOpenEventClick, onFavoriteClick}){
+  constructor({point, possibleOffers, onOpenEventClick, onFavoriteClick}){
     super();
     this.#point = point;
+    this.#possibleOffers = possibleOffers;
     this.#onOpenEventClick = onOpenEventClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -64,7 +78,7 @@ export default class EventView extends AbstractView {
   }
 
   get template(){
-    return createEventTemplate(this.#point);
+    return createEventTemplate(this.#point, this.#possibleOffers);
   }
 
   #openEventClickHandler = (evt) => {
