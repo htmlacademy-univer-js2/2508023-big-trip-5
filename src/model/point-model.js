@@ -80,7 +80,7 @@ export default class PointModel extends Observable{
     this._notify(UpdateType.INIT);
   }
 
-  updatePoint = async (updateType, update) => {
+  async updatePoint(updateType, update){
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -101,7 +101,7 @@ export default class PointModel extends Observable{
     } catch (err) {
       throw new Error('Can\'t update event');
     }
-  };
+  }
 
   addPoint(updateType, update) {
     this.#points = [
