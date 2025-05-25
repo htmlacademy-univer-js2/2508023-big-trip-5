@@ -99,6 +99,7 @@ export default class PointPresenter{
 
   #handleFormSubmit = (update) => {
     const isPatchUpdate = (this.#point.type !== update.type) || (this.#point.destination !== update.destination);
+    console.log('вызывается handleFormSubmit');
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
@@ -109,6 +110,7 @@ export default class PointPresenter{
   };
 
   #handleDeleteClick = (point) => {
+    console.log('вызывается handleDeleteClick');
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
@@ -117,6 +119,7 @@ export default class PointPresenter{
   };
 
   #handleFavoriteClick = () => {
+    console.log('вызывается handleFavoriteClick');
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,

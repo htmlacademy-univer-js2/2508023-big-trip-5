@@ -1,4 +1,5 @@
 import { getRandomInteger } from './utils/common.js';
+import dayjs from 'dayjs';
 
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
@@ -48,8 +49,8 @@ const BLANK_POINT = {
   id: 0,
   type: POINT_TYPES[0],
   destination: null,
-  dateFrom: '',
-  dateTo: '',
+  dateFrom: dayjs().format('DD/MM/YY HH:mm'),
+  dateTo: dayjs().format('DD/MM/YY HH:mm'),
   offers: null,
   price: 0,
   pictures: [

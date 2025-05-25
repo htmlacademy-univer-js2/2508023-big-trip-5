@@ -36,6 +36,28 @@ export default class PointsApiService extends ApiService {
     return parsedResponse;
   }
 
+  async addPoint(point) {
+    const response = await this._load({
+      url: 'points',
+      method: Method.POST,
+      body: JSON.stringify(this.#adaptToServer(point)),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  }
+
+  async deletePoint(point) {
+    const response = await this._load({
+      url: `points/${point.id}`,
+      method: Method.DELETE,
+    });
+
+    return response;
+  }
+
   #adaptToServer = (point) => {
     const adaptedData = {
       ...point,
@@ -43,9 +65,15 @@ export default class PointsApiService extends ApiService {
       'date_from': point.dateFrom.toISOString(),
       'date_to': point.dateTo.toISOString(),
       'is_favorite': point.isFavorite,
+      'type': point.type || 'taxi',
+      'destination': point.destination,
+      'offers': point.offers
     };
 
     delete adaptedData.price;
+    delete adaptedData.type;
+    delete adaptedData.destination;
+    delete adaptedData.offers;
     delete adaptedData.dateFrom;
     delete adaptedData.dateTo;
     delete adaptedData.isFavorite;

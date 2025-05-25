@@ -163,7 +163,7 @@ export default class AddEventView extends AbstractStatefulView{
         dateFormat: 'd/m/y H:i',
         ['time_24hr']: true,
         enableTime: true,
-        defaultDate: dayjs(this._state.dateFrom).toDate(),
+        defaultDate: this._state.dateFrom,
         onChange: this.#dateStartChangeHandler,
       },
     );
@@ -180,7 +180,7 @@ export default class AddEventView extends AbstractStatefulView{
         dateFormat: 'd/m/y H:i',
         ['time_24hr']: true,
         enableTime: true,
-        defaultDate: dayjs(this._state.dateTo).toDate(),
+        defaultDate: this._state.dateTo,
         onChange: this.#dateEndChangeHandler,
       },
     );
