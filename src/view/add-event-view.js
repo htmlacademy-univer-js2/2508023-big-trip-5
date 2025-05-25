@@ -2,7 +2,6 @@ import { BLANK_POINT } from '../const.js';
 import { correctDateFormat } from '../utils/point.js';
 import { POINT_TYPES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import dayjs from 'dayjs';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -188,13 +187,13 @@ export default class AddEventView extends AbstractStatefulView{
 
   #dateStartChangeHandler = ([chosenDate]) => {
     this.updateElement({
-      dateFrom: dayjs(chosenDate),
+      dateFrom: chosenDate,
     });
   };
 
   #dateEndChangeHandler = ([chosenDate]) => {
     this.updateElement({
-      dateTo: dayjs(chosenDate),
+      dateTo: chosenDate,
     });
   };
 
