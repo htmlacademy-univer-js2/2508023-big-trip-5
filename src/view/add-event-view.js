@@ -33,16 +33,27 @@ const createPhotosList = (destination) => {
 </div>`;
 };
 
-const createOffer = (offer, isDisabled) => `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${offer.id - 1}" type="checkbox" name="event-offer-luggage" checked ${isDisabled ? 'disabled' : ''}>
-        <label class="event__offer-label" for="event-offer-luggage-${offer.id - 1}">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-        </label>
-      </div>`;
+const createOffer = (offer, isChecked, isDisabled) => `<div class="event__offer-selector">
+  <input class="event__offer-checkbox visually-hidden"
+         id="event-offer-luggage-${offer.id}"
+         type="checkbox"
+         name="event-offer-luggage"
+         data-id="${offer.id}"
+         data-title="${offer.title}"
+         data-price="${offer.price}"
+         ${isChecked ? 'checked' : ''}
+         ${isDisabled ? 'disabled' : ''}>
+  <label class="event__offer-label" for="event-offer-luggage-${offer.id}">
+    <span class="event__offer-title">${offer.title}</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">${offer.price}</span>
+  </label>
+</div>`;
 
-const createOffers = (offers, isDisabled) => offers.map((offer) => createOffer(offer, isDisabled)).join('');
+const createOffers = (allOffers, selectedOffers, isDisabled) => allOffers.map((offer) => {
+  const isChecked = selectedOffers.some((selectedOffer) => selectedOffer.id === offer.id);
+  return createOffer(offer, isChecked, isDisabled);
+}).join('');
 
 const createTypePoints = (id, type, currentType, isDisabled) => {
   const isChecked = currentType === type ? 'checked' : '';
@@ -113,7 +124,7 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-      ${offers === null ? '' : createOffers(possibleOffers[type], isDisabled)}
+      ${offers === null ? '' : createOffers(possibleOffers[type], offers, isDisabled)}
     </div>
   </section>
 
@@ -211,6 +222,8 @@ export default class AddEventView extends AbstractStatefulView{
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationSelectHandler);
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
+
   }
 
   #formResetClickHandler = (evt) => {
@@ -258,6 +271,22 @@ export default class AddEventView extends AbstractStatefulView{
         name: newDestination.name || '',
         pictures: newDestination.pictures || [],
       },
+    });
+  };
+
+  #offerChangeHandler = (evt) => {
+    evt.preventDefault();
+
+    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+
+    const checkedOffersValues = checkedOffers.map((checkbox) => ({
+      id: checkbox.dataset.id,
+      title: checkbox.dataset.title,
+      price: Number(checkbox.dataset.price),
+    }));
+
+    this.updateElement({
+      offers: checkedOffersValues, // Обновляем состояние offers
     });
   };
 

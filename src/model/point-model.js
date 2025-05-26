@@ -23,6 +23,7 @@ export default class PointModel extends Observable{
         dateFrom: new Date(point['date_from']),
         dateTo: new Date(point['date_to']),
         isFavorite: point['is_favorite'],
+        offers: point.offers
       },
     );
 
