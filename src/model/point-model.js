@@ -1,7 +1,6 @@
 import Observable from '../framework/observable.js';
 import { mockDestination } from '../mock/destination';
 import { mockOffers } from '../mock/offers';
-import dayjs from 'dayjs';
 import { UpdateType } from '../const.js';
 
 export default class PointModel extends Observable{
@@ -21,9 +20,10 @@ export default class PointModel extends Observable{
       point,
       {
         price: point['base_price'],
-        dateFrom: dayjs(point['date_from']),
-        dateTo: dayjs(point['date_to']),
+        dateFrom: new Date(point['date_from']),
+        dateTo: new Date(point['date_to']),
         isFavorite: point['is_favorite'],
+        offers: point.offers
       },
     );
 
@@ -103,28 +103,34 @@ export default class PointModel extends Observable{
     }
   }
 
-  addPoint(updateType, update) {
-    this.#points = [
-      update,
-      ...this.#points,
-    ];
-
-    this._notify(updateType, update);
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#pointsApiService.addPoint(update);
+      const newPoint = this.#adaptPointsToClient(response);
+      this.#points = [newPoint, ...this.#points];
+      this._notify(updateType, newPoint);
+    } catch(err) {
+      throw new Error('Can\'t add point');
+    }
   }
 
-  deletePoint(updateType, update) {
+  async deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting point');
     }
 
-    this.#points = [
-      ...this.#points.slice(0, index),
-      ...this.#points.slice(index + 1),
-    ];
-
-    this._notify(updateType);
+    try {
+      await this.#pointsApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch(err) {
+      throw new Error('Can\'t delete point');
+    }
   }
 
 }

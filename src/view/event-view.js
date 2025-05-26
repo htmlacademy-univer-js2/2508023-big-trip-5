@@ -18,7 +18,7 @@ const createOffers = (offers) => {
   return newOffers;
 };
 
-const createEventTemplate = (point, offers) => {
+const createEventTemplate = (point, possibleOffers) => {
   const {dateFrom, dateTo, price, type, isFavorite} = point;
   const date = extractDate(dateFrom);
   const startTime = extractTime(dateFrom);
@@ -45,7 +45,7 @@ const createEventTemplate = (point, offers) => {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      ${createOffers(offers[type])}
+      ${createOffers(possibleOffers[type])}
     </ul>
     <button class="event__favorite-btn event__favorite-btn${activeFavorite}" type="button">
       <span class="visually-hidden">Add to favorite</span>
