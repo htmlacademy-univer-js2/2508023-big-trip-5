@@ -53,13 +53,13 @@ export default class PointPresenter{
       return;
     }
 
-    if (this.#pointListContainer.contains(prevPointComponent?.element)) {
-      replace(this.#pointComponent, prevPointComponent);
-      return;
+    if (this.#mode === Mode.DEFAULT) {
+      replace(this.#pointComponent, prevEventViewComponent);
     }
 
-    if (this.#pointListContainer.contains(prevEventViewComponent?.element)) {
-      replace(this.#eventViewComponent, prevEventViewComponent);
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#pointComponent, prevPointComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevEventViewComponent);
@@ -76,6 +76,41 @@ export default class PointPresenter{
       this.#pointComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#eventViewComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointComponent.shake(resetFormState);
   }
 
   #replacePointToForm() {
@@ -99,18 +134,15 @@ export default class PointPresenter{
 
   #handleFormSubmit = (update) => {
     const isPatchUpdate = (this.#point.type !== update.type) || (this.#point.destination !== update.destination);
-    console.log('вызывается handleFormSubmit');
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
       update
     );
-    this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
   #handleDeleteClick = (point) => {
-    console.log('вызывается handleDeleteClick');
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
