@@ -3,7 +3,7 @@ import { mockDestination } from '../mock/destination';
 import { mockOffers } from '../mock/offers';
 import { UpdateType } from '../const.js';
 
-export default class PointModel extends Observable{
+export default class PointModel extends Observable {
   #points = [];
   #destinations = mockDestination;
   #offers = mockOffers;
@@ -23,7 +23,6 @@ export default class PointModel extends Observable{
         dateFrom: new Date(point['date_from']),
         dateTo: new Date(point['date_to']),
         isFavorite: point['is_favorite'],
-        offers: point.offers
       },
     );
 
@@ -40,7 +39,6 @@ export default class PointModel extends Observable{
     serverOffers.forEach((serverOffer) => {
       adaptedOffers[serverOffer.type] = serverOffer.offers;
     });
-
     return adaptedOffers;
   };
 
@@ -54,6 +52,19 @@ export default class PointModel extends Observable{
 
   get offers() {
     return this.#offers;
+  }
+
+  getCityList() {
+    const destinations = this.#points.map((point) => {
+      const destination = this.#destinations.find((dest) => dest.id === point.destination);
+      return destination ? destination.name : '';
+    }).filter(Boolean);
+
+    if (destinations.length > 3) {
+      return `${destinations[0]} … ${destinations[destinations.length - 1]}`;
+    }
+
+    return destinations.join(' — ');
   }
 
   async init () {
@@ -132,5 +143,4 @@ export default class PointModel extends Observable{
       throw new Error('Can\'t delete point');
     }
   }
-
 }

@@ -270,6 +270,7 @@ export default class AddEventView extends AbstractStatefulView{
         description: newDestination.description || '',
         name: newDestination.name || '',
         pictures: newDestination.pictures || [],
+        id: newDestination.id,
       },
     });
   };
@@ -286,7 +287,7 @@ export default class AddEventView extends AbstractStatefulView{
     }));
 
     this.updateElement({
-      offers: checkedOffersValues, // Обновляем состояние offers
+      offers: checkedOffersValues,
     });
   };
 
