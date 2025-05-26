@@ -23,7 +23,6 @@ export default class PointModel extends Observable{
         dateFrom: new Date(point['date_from']),
         dateTo: new Date(point['date_to']),
         isFavorite: point['is_favorite'],
-        offers: point.offers
       },
     );
 
@@ -96,7 +95,6 @@ export default class PointModel extends Observable{
         updatedPoint,
         ...this.#points.slice(index + 1),
       ];
-
       this._notify(updateType, updatedPoint);
     } catch (err) {
       throw new Error('Can\'t update event');

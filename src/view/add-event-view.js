@@ -286,7 +286,7 @@ export default class AddEventView extends AbstractStatefulView{
     }));
 
     this.updateElement({
-      offers: checkedOffersValues, // Обновляем состояние offers
+      offers: checkedOffersValues,
     });
   };
 
