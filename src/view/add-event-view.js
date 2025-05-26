@@ -270,6 +270,7 @@ export default class AddEventView extends AbstractStatefulView{
         description: newDestination.description || '',
         name: newDestination.name || '',
         pictures: newDestination.pictures || [],
+        id: newDestination.id,
       },
     });
   };
