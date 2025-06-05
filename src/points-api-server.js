@@ -38,10 +38,11 @@ export default class PointsApiService extends ApiService {
   }
 
   async addPoint(point) {
+    const action = 'ADD';
     const response = await this._load({
       url: 'points',
       method: Method.POST,
-      body: JSON.stringify(this.#adaptToServer(point)),
+      body: JSON.stringify(this.#adaptToServer(point, action)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
@@ -59,15 +60,22 @@ export default class PointsApiService extends ApiService {
     return response;
   }
 
-  #adaptToServer = (point) => {
+  #adaptToServer = (point, action) => {
+    const newOffers = (offers) => offers.map((offer) => offer.id);
     const adaptedData = {
       ...point,
+      'offers': newOffers(point.offers),
+      'destination': point.destination,
       'base_price': point.price,
       'date_from': point.dateFrom ? dayjs(point.dateFrom).toISOString() : '',
       'date_to': point.dateTo ? dayjs(point.dateTo).toISOString() : '',
       'is_favorite': point.isFavorite,
       'id': String(point.id),
     };
+
+    if (action){
+      delete adaptedData.id;
+    }
 
     delete adaptedData.price;
     delete adaptedData.dateFrom;

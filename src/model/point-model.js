@@ -1,12 +1,10 @@
 import Observable from '../framework/observable.js';
-import { mockDestination } from '../mock/destination';
-import { mockOffers } from '../mock/offers';
 import { UpdateType } from '../const.js';
 
-export default class PointModel extends Observable{
+export default class PointModel extends Observable {
   #points = [];
-  #destinations = mockDestination;
-  #offers = mockOffers;
+  #destinations = null;
+  #offers = null;
   #pointsApiService = null;
 
   constructor({pointsApiService}) {
@@ -23,7 +21,6 @@ export default class PointModel extends Observable{
         dateFrom: new Date(point['date_from']),
         dateTo: new Date(point['date_to']),
         isFavorite: point['is_favorite'],
-        offers: point.offers
       },
     );
 
@@ -40,7 +37,6 @@ export default class PointModel extends Observable{
     serverOffers.forEach((serverOffer) => {
       adaptedOffers[serverOffer.type] = serverOffer.offers;
     });
-
     return adaptedOffers;
   };
 
@@ -132,5 +128,4 @@ export default class PointModel extends Observable{
       throw new Error('Can\'t delete point');
     }
   }
-
 }

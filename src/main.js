@@ -4,6 +4,7 @@ import PointModel from './model/point-model.js';
 import FilterModel from './model/filter-model.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 import PointsApiService from './points-api-server.js';
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import { render } from './framework/render.js';
 
 const AUTHORIZATION = 'Basic sS2sf774wcl2da9j';
@@ -31,6 +32,8 @@ const filterPresenter = new FilterPresenter({
   pointModel
 });
 
+const tripInfoPresenter = new TripInfoPresenter(siteHeaderElement, pointModel);
+
 const newPointButtonComponent = new NewPointButtonView({
   onClick: handleNewPointButtonClick
 });
@@ -46,6 +49,7 @@ function handleNewPointButtonClick() {
 
 boardPresenter.init();
 filterPresenter.init();
+tripInfoPresenter.init();
 pointModel.init()
   .finally(() => {
     render(newPointButtonComponent, siteHeaderElement);

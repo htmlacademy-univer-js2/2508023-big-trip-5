@@ -6,7 +6,6 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-
 const createPointOption = (city) => `<option value="${city.name}"></option>`;
 
 const createPointOptionsList = (destinations) => destinations === undefined ? null : destinations.map((city) => createPointOption(city)).join('');
@@ -33,6 +32,18 @@ const createPhotosList = (destination) => {
 </div>`;
 };
 
+const findDestinationById = (possibleDestinations, id) => {
+  let foundDestination = null;
+
+  possibleDestinations.forEach((destination) => {
+    if (destination.id === id) {
+      foundDestination = destination;
+    }
+  });
+
+  return foundDestination;
+};
+
 const createOffer = (offer, isChecked, isDisabled) => `<div class="event__offer-selector">
   <input class="event__offer-checkbox visually-hidden"
          id="event-offer-luggage-${offer.id}"
@@ -50,10 +61,25 @@ const createOffer = (offer, isChecked, isDisabled) => `<div class="event__offer-
   </label>
 </div>`;
 
-const createOffers = (allOffers, selectedOffers, isDisabled) => allOffers.map((offer) => {
-  const isChecked = selectedOffers.some((selectedOffer) => selectedOffer.id === offer.id);
-  return createOffer(offer, isChecked, isDisabled);
-}).join('');
+const createOffers = (allOffers, selectedOffers, isDisabled) => {
+  let currentOffers = '';
+  allOffers.forEach((offer) => {
+    const isChecked = selectedOffers.includes(offer.id);
+    currentOffers += createOffer(offer, isChecked, isDisabled);
+  });
+  return currentOffers;
+};
+
+const exstractOffersPrice = (allOffers, offers) => {
+  let priceWithOffers = 0;
+  allOffers.forEach((offer) => {
+    const isChecked = offers.includes(offer.id);
+    if (isChecked){
+      priceWithOffers += offer.price;
+    }
+  });
+  return priceWithOffers;
+};
 
 const createTypePoints = (id, type, currentType, isDisabled) => {
   const isChecked = currentType === type ? 'checked' : '';
@@ -67,10 +93,11 @@ const typesToLowerCase = POINT_TYPES.map((type) => type.toLowerCase());
 const createTypePointsList = (id, currentType, isDisabled) => typesToLowerCase.map((type) => createTypePoints(id, type, currentType, isDisabled)).join('');
 
 const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => {
-  const {dateFrom, dateTo, price, type, id, offers, destination, isDisabled, isSaving, isDeleting, } = point;
+  const { dateFrom, dateTo, price, type, id, offers, destination, isDisabled, isSaving, isDeleting, } = point;
   const newDateFrom = correctDateFormat(dateFrom);
   const newDateTo = correctDateFormat(dateTo);
   const optionsList = createPointOptionsList(possibleDestinations);
+  //console.log(offers);
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -94,7 +121,7 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
     <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination ? he.encode(destination.name || '') : ''}" ${isDisabled ? 'disabled' : ''} list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${findDestinationById(possibleDestinations,destination) ? he.encode(findDestinationById(possibleDestinations,destination).name || '') : ''}" ${isDisabled ? 'disabled' : ''} list="destination-list-1">
     <datalist id="destination-list-1">
     ${optionsList}
     </datalist>
@@ -113,7 +140,7 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
       <span class="visually-hidden">Price</span>
       &euro;
     </label>
-    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}" ${isDisabled ? 'disabled' : ''}>
+    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price + exstractOffersPrice(possibleOffers[type], offers)}" ${isDisabled ? 'disabled' : ''}>
   </div>
 
   <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
@@ -124,14 +151,14 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-      ${offers === null ? '' : createOffers(possibleOffers[type], offers, isDisabled)}
+      ${offers === null ? '' : createOffers(possibleOffers[type], point.offers, isDisabled)}
     </div>
   </section>
 
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${destination?.description ?? ''}</p>
-    ${createPhotosList(destination)}
+    <p class="event__destination-description">${findDestinationById(possibleDestinations,destination) ? findDestinationById(possibleDestinations,destination).description : ''}</p>
+    ${createPhotosList(findDestinationById(possibleDestinations,destination))}
   </section>
 </section>
 </form>`
@@ -161,6 +188,18 @@ export default class AddEventView extends AbstractStatefulView{
   get template() {
     return createAddEventTemplate(this._state, this.#possibleOffers, this.#possibleDestinations);
   }
+
+  #onPriceInput = (evt) => {
+    evt.preventDefault();
+    if (evt.target.value.length) {
+      this.updateElement({
+        price: Number(evt.target.value),
+      }, true);
+    } else {
+      this.element.querySelector('.event__input--price');
+      this.element.querySelector('.event__input--price').reportValidity();
+    }
+  };
 
   #setDatepickerStart = () => {
     if (this.#datepickerStart) {
@@ -223,7 +262,7 @@ export default class AddEventView extends AbstractStatefulView{
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
-
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceInput);
   }
 
   #formResetClickHandler = (evt) => {
@@ -266,30 +305,36 @@ export default class AddEventView extends AbstractStatefulView{
 
     const newDestination = this.#possibleDestinations.find((destination) => destination.name === evt.target.value);
     this.updateElement({
-      destination: {
-        description: newDestination.description || '',
-        name: newDestination.name || '',
-        pictures: newDestination.pictures || [],
-      },
+      destination: newDestination.id,
     });
   };
+
 
   #offerChangeHandler = (evt) => {
     evt.preventDefault();
+    const offerCheckbox = evt.target;
+    const offerId = offerCheckbox.dataset.id;
+    const offerPrice = Number(offerCheckbox.dataset.price);
+    const isChecked = offerCheckbox.checked;
 
-    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    const existingPrice = this._state.price || 0;
 
-    const checkedOffersValues = checkedOffers.map((checkbox) => ({
-      id: checkbox.dataset.id,
-      title: checkbox.dataset.title,
-      price: Number(checkbox.dataset.price),
-    }));
+    let updatedOffers = this._state.offers || [];
+    let updatedPrice = existingPrice;
+
+    if (isChecked) {
+      updatedOffers = [...updatedOffers, offerId];
+      updatedPrice += offerPrice;
+    } else {
+      updatedOffers = updatedOffers.filter((id) => id !== offerId);
+      updatedPrice -= offerPrice;
+    }
 
     this.updateElement({
-      offers: checkedOffersValues, // Обновляем состояние offers
+      offers: updatedOffers,
+      price: updatedPrice,
     });
   };
-
 
   static parsePointToState(point) {
     return {
