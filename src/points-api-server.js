@@ -61,10 +61,9 @@ export default class PointsApiService extends ApiService {
   }
 
   #adaptToServer = (point, action) => {
-    const newOffers = (offers) => offers.map((offer) => offer.id);
     const adaptedData = {
       ...point,
-      'offers': newOffers(point.offers),
+      'offers': point.offers,
       'destination': point.destination,
       'base_price': point.price,
       'date_from': point.dateFrom ? dayjs(point.dateFrom).toISOString() : '',

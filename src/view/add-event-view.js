@@ -62,6 +62,7 @@ const createOffer = (offer, isChecked, isDisabled) => `<div class="event__offer-
 </div>`;
 
 const createOffers = (allOffers, selectedOffers, isDisabled) => {
+  //console.log(selectedOffers);
   let currentOffers = '';
   allOffers.forEach((offer) => {
     const isChecked = selectedOffers.includes(offer.id);
