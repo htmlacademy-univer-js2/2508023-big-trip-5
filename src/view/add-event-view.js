@@ -62,7 +62,6 @@ const createOffer = (offer, isChecked, isDisabled) => `<div class="event__offer-
 </div>`;
 
 const createOffers = (allOffers, selectedOffers, isDisabled) => {
-  //console.log(selectedOffers);
   let currentOffers = '';
   allOffers.forEach((offer) => {
     const isChecked = selectedOffers.includes(offer.id);
@@ -73,12 +72,14 @@ const createOffers = (allOffers, selectedOffers, isDisabled) => {
 
 const exstractOffersPrice = (allOffers, offers) => {
   let priceWithOffers = 0;
+
   allOffers.forEach((offer) => {
     const isChecked = offers.includes(offer.id);
     if (isChecked){
       priceWithOffers += offer.price;
     }
   });
+
   return priceWithOffers;
 };
 
@@ -98,7 +99,6 @@ const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => 
   const newDateFrom = correctDateFormat(dateFrom);
   const newDateTo = correctDateFormat(dateTo);
   const optionsList = createPointOptionsList(possibleDestinations);
-  //console.log(offers);
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -192,14 +192,12 @@ export default class AddEventView extends AbstractStatefulView{
 
   #onPriceInput = (evt) => {
     evt.preventDefault();
-    if (evt.target.value.length) {
-      this.updateElement({
-        price: Number(evt.target.value),
-      }, true);
-    } else {
-      this.element.querySelector('.event__input--price');
-      this.element.querySelector('.event__input--price').reportValidity();
+    if (!evt.target.value){
+      return;
     }
+    this._setState({
+      price: parseInt(evt.target.value, 10),
+    });
   };
 
   #setDatepickerStart = () => {
@@ -315,25 +313,29 @@ export default class AddEventView extends AbstractStatefulView{
     evt.preventDefault();
     const offerCheckbox = evt.target;
     const offerId = offerCheckbox.dataset.id;
-    const offerPrice = Number(offerCheckbox.dataset.price);
+    //const offerPrice = parseInt(offerCheckbox.dataset.price, 10);
     const isChecked = offerCheckbox.checked;
 
-    const existingPrice = this._state.price || 0;
+    //const existingPrice = this._state.price || 0;
 
     let updatedOffers = this._state.offers || [];
-    let updatedPrice = existingPrice;
+    //let updatedPrice = existingPrice;
+    //console.log(updatedPrice);
+    //console.log('isChecked:', isChecked);
 
     if (isChecked) {
       updatedOffers = [...updatedOffers, offerId];
-      updatedPrice += offerPrice;
+      //updatedPrice += offerPrice;
     } else {
       updatedOffers = updatedOffers.filter((id) => id !== offerId);
-      updatedPrice -= offerPrice;
+      //console.log(updatedOffers);
+      //updatedPrice -= offerPrice;
     }
+    //console.log(updatedPrice);
 
     this.updateElement({
       offers: updatedOffers,
-      price: updatedPrice,
+      //price: updatedPrice,
     });
   };
 

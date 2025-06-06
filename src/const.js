@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { getRandomInteger } from './utils/common';
 
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
@@ -47,14 +46,12 @@ const UpdateType = {
 
 const BLANK_POINT = {
   id: getRandomInteger(0, 100),
-  type: 'taxi',
+  type: 'flight',
   destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e04',
-  dateFrom: dayjs('2019-07-10T22:55:56.845Z').format('DD/MM/YY HH:mm'),
-  dateTo: dayjs('2019-07-11T11:22:13.375Z').format('DD/MM/YY HH:mm'),
-  offers: [
-    'b4c3e4e6-9053-42ce-b747-e281314baa31'
-  ],
-  price: 1100,
+  dateFrom: null,
+  dateTo: null,
+  offers: [],
+  price: 0,
   isFavorite: false,
 };
 
