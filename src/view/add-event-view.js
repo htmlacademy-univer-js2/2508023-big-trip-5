@@ -313,29 +313,18 @@ export default class AddEventView extends AbstractStatefulView{
     evt.preventDefault();
     const offerCheckbox = evt.target;
     const offerId = offerCheckbox.dataset.id;
-    //const offerPrice = parseInt(offerCheckbox.dataset.price, 10);
     const isChecked = offerCheckbox.checked;
 
-    //const existingPrice = this._state.price || 0;
-
     let updatedOffers = this._state.offers || [];
-    //let updatedPrice = existingPrice;
-    //console.log(updatedPrice);
-    //console.log('isChecked:', isChecked);
 
     if (isChecked) {
       updatedOffers = [...updatedOffers, offerId];
-      //updatedPrice += offerPrice;
     } else {
       updatedOffers = updatedOffers.filter((id) => id !== offerId);
-      //console.log(updatedOffers);
-      //updatedPrice -= offerPrice;
     }
-    //console.log(updatedPrice);
 
     this.updateElement({
       offers: updatedOffers,
-      //price: updatedPrice,
     });
   };
 
