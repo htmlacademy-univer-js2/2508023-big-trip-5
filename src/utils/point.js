@@ -24,7 +24,7 @@ const calculateFlightTime = (startTime, endTime, unit = 'm') =>{
   }else if (hours < 24){
     return `${hours}H ${difference - hours * 60}M`;
   }else{
-    return `${days}D ${hours}H ${difference - hours * 60}M`;
+    return `${days}D ${hours - days * 24}H ${difference - hours * 60}M`;
   }
 };
 
