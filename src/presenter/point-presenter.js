@@ -40,13 +40,15 @@ export default class PointPresenter{
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
-    this.#pointComponent = new AddEventView({
-      point: this.#point,
-      possibleDestinations: destinations,
-      possibleOffers: offers,
-      onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
-    });
+    if (!this.#pointComponent) {
+      this.#pointComponent = new AddEventView({
+        point: this.#point,
+        possibleDestinations: destinations,
+        possibleOffers: offers,
+        onFormSubmit: this.#handleFormSubmit,
+        onDeleteClick: this.#handleDeleteClick,
+      });
+    }
 
     if (prevEventViewComponent === null && prevPointComponent === null) {
       render(this.#eventViewComponent, this.#pointListContainer);
