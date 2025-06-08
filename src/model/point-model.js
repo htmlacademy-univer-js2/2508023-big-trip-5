@@ -1,12 +1,10 @@
 import Observable from '../framework/observable.js';
-import { mockDestination } from '../mock/destination';
-import { mockOffers } from '../mock/offers';
 import { UpdateType } from '../const.js';
 
 export default class PointModel extends Observable {
   #points = [];
-  #destinations = mockDestination;
-  #offers = mockOffers;
+  #destinations = null;
+  #offers = null;
   #pointsApiService = null;
 
   constructor({pointsApiService}) {

@@ -5,9 +5,9 @@ dayjs.extend(utc);
 
 const correctDateFormat = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 
-const extractDate = (date) => dayjs.utc(date).format('MMM DD');
+const extractDate = (date) => dayjs(date).format('MMM DD');
 
-const extractTime = (date) => dayjs.utc(date).format('HH:mm');
+const extractTime = (date) => dayjs(date).format('HH:mm');
 
 const isEventAfter = (date) => date && dayjs(date).isAfter(dayjs());
 
@@ -24,11 +24,14 @@ const calculateFlightTime = (startTime, endTime, unit = 'm') =>{
   }else if (hours < 24){
     return `${hours}H ${difference - hours * 60}M`;
   }else{
-    return `${days}D ${hours}H ${difference - hours * 60}M`;
+    return `${days}D ${hours - days * 24}H ${difference - hours * 60}M`;
   }
 };
 
 const calculateDurationInMinutes = (dateFrom, dateTo) => dayjs(dateTo).diff(dateFrom, 'minute');
+
+const sortByDate = (events) => events.slice().sort((a, b) => a.dateFrom - b.dateFrom);
+const createDateTemplate = (dateFrom, format) => dayjs(dateFrom).format(format);
 
 const sortPointByTime = (pointA, pointB) => {
   const durationA = calculateDurationInMinutes(pointA.dateFrom, pointA.dateTo);
@@ -52,4 +55,4 @@ const sortPointByDay = (pointA, pointB) => {
   }
 };
 
-export { correctDateFormat, extractDate, extractTime, calculateFlightTime, isEventAfter, isEventBefore, sortPointByPrice, sortPointByTime, sortPointByDay };
+export { correctDateFormat, extractDate, extractTime, sortByDate, createDateTemplate, calculateFlightTime, isEventAfter, isEventBefore, sortPointByPrice, sortPointByTime, sortPointByDay };

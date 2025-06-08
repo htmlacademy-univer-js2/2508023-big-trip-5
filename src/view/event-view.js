@@ -1,29 +1,43 @@
 import { extractDate, extractTime, calculateFlightTime } from '../utils/point.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createOffers = (offers) => {
+const createOffers = (offers, offersId) => {
   let newOffers = '';
 
   offers.forEach((offer) => {
-    const { title, price } = offer;
+    if (offersId.includes(offer.id)) {
+      const { title, price } = offer;
 
-    const offerTemplate = `<li class="event__offer">
+      const offerTemplate = `<li class="event__offer">
         <span class="event__offer-title">${title}</span>
                     &plus;&euro;&nbsp;
         <span class="event__offer-price">${price}</span>
         </li>`;
 
-    newOffers += offerTemplate;
+      newOffers += offerTemplate;
+    }
   });
   return newOffers;
 };
 
+const exstractOffersPrice = (allOffers, offers) => {
+  let priceWithOffers = 0;
+  allOffers.forEach((offer) => {
+    const isChecked = offers.includes(offer.id);
+    if (isChecked){
+      priceWithOffers += offer.price;
+    }
+  });
+  return priceWithOffers;
+};
+
 const createEventTemplate = (point, possibleOffers) => {
-  const {dateFrom, dateTo, price, type, isFavorite} = point;
+  const {dateFrom, dateTo, price, type, isFavorite, offers} = point;
   const date = extractDate(dateFrom);
   const startTime = extractTime(dateFrom);
   const endTime = extractTime(dateTo);
   const activeFavorite = isFavorite ? '--active' : '';
+  point['offersPrice'] = exstractOffersPrice(possibleOffers[type], offers);
 
   return (`
   <div class="event">
@@ -41,11 +55,11 @@ const createEventTemplate = (point, possibleOffers) => {
       <p class="event__duration">${calculateFlightTime(dateFrom, dateTo)}</p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${price}</span>
+      &euro;&nbsp;<span class="event__price-value">${price + exstractOffersPrice(possibleOffers[type], offers)}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      ${createOffers(possibleOffers[type])}
+      ${createOffers(possibleOffers[type], offers)}
     </ul>
     <button class="event__favorite-btn event__favorite-btn${activeFavorite}" type="button">
       <span class="visually-hidden">Add to favorite</span>

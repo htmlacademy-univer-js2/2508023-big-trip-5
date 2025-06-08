@@ -40,13 +40,15 @@ export default class PointPresenter{
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
-    this.#pointComponent = new AddEventView({
-      point: this.#point,
-      possibleDestinations: destinations,
-      possibleOffers: offers,
-      onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
-    });
+    if (!this.#pointComponent) {
+      this.#pointComponent = new AddEventView({
+        point: this.#point,
+        possibleDestinations: destinations,
+        possibleOffers: offers,
+        onFormSubmit: this.#handleFormSubmit,
+        onDeleteClick: this.#handleDeleteClick,
+      });
+    }
 
     if (prevEventViewComponent === null && prevPointComponent === null) {
       render(this.#eventViewComponent, this.#pointListContainer);
@@ -127,7 +129,7 @@ export default class PointPresenter{
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#replaceFormToPoint();
+      this.resetView();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
@@ -151,6 +153,7 @@ export default class PointPresenter{
   };
 
   #handleFavoriteClick = () => {
+    delete this.#point.offersPrice;
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
