@@ -153,6 +153,7 @@ export default class PointPresenter{
   };
 
   #handleFavoriteClick = () => {
+    delete this.#point.offersPrice;
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,

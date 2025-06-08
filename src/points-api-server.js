@@ -78,6 +78,7 @@ export default class PointsApiService extends ApiService {
     }
 
     delete adaptedData.price;
+    delete adaptedData.offersPrice;
     delete adaptedData.dateFrom;
     delete adaptedData.dateTo;
     delete adaptedData.isFavorite;
