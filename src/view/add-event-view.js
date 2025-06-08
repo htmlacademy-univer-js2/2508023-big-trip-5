@@ -94,7 +94,7 @@ const typesToLowerCase = POINT_TYPES.map((type) => type.toLowerCase());
 const createTypePointsList = (id, currentType, isDisabled) => typesToLowerCase.map((type) => createTypePoints(id, type, currentType, isDisabled)).join('');
 
 const createAddEventTemplate = (point, possibleOffers, possibleDestinations) => {
-  const { dateFrom, dateTo, price, type, id, offers, destination, isDisabled, isSaving, isDeleting, } = point;
+  const { dateFrom, dateTo, price, type, id, offers, destination, isDisabled, isSaving, isDeleting } = point;
   const newDateFrom = correctDateFormat(dateFrom);
   const newDateTo = correctDateFormat(dateTo);
   const optionsList = createPointOptionsList(possibleDestinations);

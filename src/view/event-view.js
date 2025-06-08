@@ -37,6 +37,7 @@ const createEventTemplate = (point, possibleOffers) => {
   const startTime = extractTime(dateFrom);
   const endTime = extractTime(dateTo);
   const activeFavorite = isFavorite ? '--active' : '';
+  point['offersPrice'] = exstractOffersPrice(possibleOffers[type], offers);
 
   return (`
   <div class="event">

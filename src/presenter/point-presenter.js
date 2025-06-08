@@ -129,7 +129,7 @@ export default class PointPresenter{
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#replaceFormToPoint();
+      this.resetView();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
