@@ -1,5 +1,4 @@
 import AbstractView from '../framework/view/abstract-view.js';
-
 import { sortByDate, createDateTemplate } from '../utils/point.js';
 
 const showStartEndPoints = (sortedPoints, destinations) => {
@@ -17,7 +16,6 @@ const showStartEndPoints = (sortedPoints, destinations) => {
   const endPointDate = createDateTemplate(sortedPoints[sortedPoints.length - 1].dateFrom, 'MMM DD');
 
   const routeMessage = sortedPoints.length > 2 ? `${startPointName} &mdash; ... &mdash; ${endPointName}` : `${startPointName} &mdash; ${endPointName}`;
-
   const routeDates = `${startPointDate}&nbsp;&mdash;&nbsp;${endPointDate}`;
 
   return (

@@ -1,6 +1,5 @@
-import { BLANK_POINT } from '../const.js';
+import { BLANK_POINT, POINT_TYPES } from '../const.js';
 import { correctDateFormat } from '../utils/point.js';
-import { POINT_TYPES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import he from 'he';
 import flatpickr from 'flatpickr';
@@ -190,62 +189,6 @@ export default class AddEventView extends AbstractStatefulView{
     return createAddEventTemplate(this._state, this.#possibleOffers, this.#possibleDestinations);
   }
 
-  #onPriceInput = (evt) => {
-    evt.preventDefault();
-    if (!evt.target.value){
-      return;
-    }
-    this._setState({
-      price: parseInt(evt.target.value, 10),
-    });
-  };
-
-  #setDatepickerStart = () => {
-    if (this.#datepickerStart) {
-      this.#datepickerStart.destroy();
-      this.#datepickerStart = null;
-    }
-    this.#datepickerStart = flatpickr(
-      this.element.querySelector('input[name=event-start-time]'),
-      {
-        dateFormat: 'd/m/y H:i',
-        ['time_24hr']: true,
-        enableTime: true,
-        defaultDate: this._state.dateFrom,
-        onChange: this.#dateStartChangeHandler,
-      },
-    );
-  };
-
-  #setDatepickerEnd = () => {
-    if (this.#datepickerEnd) {
-      this.#datepickerEnd.destroy();
-      this.#datepickerEnd = null;
-    }
-    this.#datepickerStart = flatpickr(
-      this.element.querySelector('input[name=event-end-time]'),
-      {
-        dateFormat: 'd/m/y H:i',
-        ['time_24hr']: true,
-        enableTime: true,
-        defaultDate: this._state.dateTo,
-        onChange: this.#dateEndChangeHandler,
-      },
-    );
-  };
-
-  #dateStartChangeHandler = ([chosenDate]) => {
-    this.updateElement({
-      dateFrom: chosenDate,
-    });
-  };
-
-  #dateEndChangeHandler = ([chosenDate]) => {
-    this.updateElement({
-      dateTo: chosenDate,
-    });
-  };
-
   reset(point) {
     this.updateElement(
       AddEventView.parsePointToState(point),
@@ -325,6 +268,62 @@ export default class AddEventView extends AbstractStatefulView{
 
     this.updateElement({
       offers: updatedOffers,
+    });
+  };
+
+  #onPriceInput = (evt) => {
+    evt.preventDefault();
+    if (!evt.target.value){
+      return;
+    }
+    this._setState({
+      price: parseInt(evt.target.value, 10),
+    });
+  };
+
+  #setDatepickerStart = () => {
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('input[name=event-start-time]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        ['time_24hr']: true,
+        enableTime: true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateStartChangeHandler,
+      },
+    );
+  };
+
+  #setDatepickerEnd = () => {
+    if (this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('input[name=event-end-time]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        ['time_24hr']: true,
+        enableTime: true,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateEndChangeHandler,
+      },
+    );
+  };
+
+  #dateStartChangeHandler = ([chosenDate]) => {
+    this.updateElement({
+      dateFrom: chosenDate,
+    });
+  };
+
+  #dateEndChangeHandler = ([chosenDate]) => {
+    this.updateElement({
+      dateTo: chosenDate,
     });
   };
 
