@@ -52,6 +52,19 @@ export default class PointModel extends Observable {
     return this.#offers;
   }
 
+  getCityList() {
+    const destinations = this.#points.map((point) => {
+      const destination = this.#destinations.find((dest) => dest.id === point.destination);
+      return destination ? destination.name : '';
+    }).filter(Boolean);
+
+    if (destinations.length > 3) {
+      return `${destinations[0]} … ${destinations[destinations.length - 1]}`;
+    }
+
+    return destinations.join(' — ');
+  }
+
   async init () {
     try {
       const events = await this.#pointsApiService.points;
